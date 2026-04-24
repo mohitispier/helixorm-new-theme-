@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Reputation Management & Monitoring Services | Helix ORM</title>
+  <meta name="description" content="Helix ORM is a leading reputation management company, assisting small, mid-sized, and large businesses with online reputation monitoring and management.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #8ab44a;
+      --hero: #1a0f2e;
+      --bg: #f9f8fb;
+      --fg: #1c1228;
+      --muted: #6b6478;
+      --border: #e2dcea;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    .text-center { text-align: center; }
+    .section-padding { padding: 80px 0; }
+    
+    /* Navbar */
+    nav { background: var(--hero); padding: 0 2rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
+    .logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; padding: 8px 16px; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a.active { color: var(--primary); }
+
+    /* Hero */
+    .hero { background: var(--hero); color: white; padding: 100px 0; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 20px; }
+    .hero p { max-width: 800px; margin: 0 auto; opacity: 0.8; font-size: 1.1rem; }
+
+    /* Info Box */
+    .info-card { background: white; padding: 40px; border-radius: 24px; border: 1px solid var(--border); margin-top: -50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+    /* Grid Layouts */
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-top: 40px; }
+    .service-item { background: white; padding: 30px; border-radius: 20px; border: 1px solid var(--border); transition: 0.3s; }
+    .service-item:hover { border-color: var(--primary); transform: translateY(-5px); }
+
+    /* AI Section */
+    .ai-wrapper { background: var(--hero); color: white; padding: 60px; border-radius: 30px; margin: 60px 0; }
+    .ai-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 40px; text-align: left; }
+    .ai-card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+
+    /* Process Steps */
+    .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 40px; }
+    .step { text-align: center; }
+    .step-num { font-size: 3rem; font-weight: 800; color: var(--primary); opacity: 0.2; line-height: 1; }
+
+    /* Button */
+    .btn { background: var(--primary); color: white; padding: 12px 30px; border-radius: 999px; text-decoration: none; font-weight: 600; display: inline-block; transition: 0.3s; }
+    .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    @media (max-width: 768px) {
+      .ai-grid, .process-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">H</div>
+      <span style="font-weight:700">Helix ORM</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html" class="active">Services</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <a href="contact.html" class="btn" style="padding: 8px 20px;">Get Started</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span style="color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">Trusted Monitoring Services</span>
+    <h1>Boost Your Brand’s Digital Reputation with Helix ORM</h1>
+    <p>One negative review or mention can impact the long-term growth of your online business. We craft a proactive reputation management strategy that ensures a positive presence for your brand in search results.</p>
+  </div>
+</header>
+
+<div class="container">
+  <section class="info-card">
+    <h2 style="margin-bottom: 20px;">Let Helix ORM Take Control of Your Online Reputation</h2>
+    <p style="color: var(--muted); margin-bottom: 20px;">Your brand’s reputation is how people view you online and is determined by your Google rankings, online reviews, social media presence, and digital forums talking about you. If you are planning to improve your online reputation, rely on none other than Helix ORM.</p>
+    <p style="color: var(--muted);">We provide professional reputation management services to large, mid-sized, and small businesses to assist them in taking control of their digital presence and reach. We utilize a strategic approach to help you monitor your online mentions, remove or suppress negative content, create a visible online brand, and enhance trust with your customers.</p>
+  </section>
+</div>
+
+<section class="container section-padding">
+  <div class="text-center">
+    <h2 style="font-size: 2.2rem;">Our Online Reputation Management Services- What We Offer</h2>
+    <p style="color: var(--muted); margin-top: 10px;">Helix ORM provides complete online reputation management services based on the unique needs of businesses, entrepreneurs, and professionals.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-item">
+      <h3>Reputation Analysis & Audit</h3>
+      <p style="margin-top: 10px; color: var(--muted);">At the beginning of every campaign, we perform a comprehensive analysis of your online reputation by analyzing your company's search engine results, customer reviews, social media mentions, and press coverage.</p>
+    </div>
+    <div class="service-item">
+      <h3>Negative Content Removal</h3>
+      <p style="margin-top: 10px; color: var(--muted);">Helix ORM removes negative information and uses SEO strategies to either suppress or lessen the damaging content. We utilize the latest tactics to push all negative search results lower.</p>
+    </div>
+    <div class="service-item">
+      <h3>Review/ Rating Improvement</h3>
+      <p style="margin-top: 10px; color: var(--muted);">We focus on review and rating management by monitoring multiple platforms, replying to negative comments, and helping improve overall ratings to build customer trust.</p>
+    </div>
+    <div class="service-item">
+      <h3>Positive Content Creation</h3>
+      <p style="margin-top: 10px; color: var(--muted);">We create and post SEO-optimized articles, press releases, and blogs. This helps in making a stronger digital footprint for your brand.</p>
+    </div>
+    <div class="service-item">
+      <h3>Daily Reputation Monitoring</h3>
+      <p style="margin-top: 10px; color: var(--muted);">Helix ORM continuously monitors your brand mentions across search engines, review websites, and social platforms 24/7.</p>
+    </div>
+    <div class="service-item">
+      <h3>Crisis Reputation Management</h3>
+      <p style="margin-top: 10px; color: var(--muted);">Our managers employ crisis techniques to quickly assess unexpected negative criticism and restore your business to a stable position.</p>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <section class="ai-wrapper text-center">
+    <span style="color: var(--primary); font-weight: 700; font-size: 0.8rem;">NEXT-GEN MONITORING</span>
+    <h2 style="font-size: 2.5rem; margin: 15px 0;">Get AI Search Visibility Tracking & Alerts</h2>
+    <p style="opacity: 0.7; max-width: 800px; margin: 0 auto;">Measure your brand’s visibility in AI-powered tools like ChatGPT, Perplexity AI, Google Gemini, and Claude.</p>
+    
+    <div class="ai-grid">
+      <div class="ai-card">
+        <h4 style="color: var(--primary);">1. LLM Visibility Scoring</h4>
+        <p style="font-size: 0.9rem; margin-top: 8px;">Understand how often and where your brand is featured in AI-generated responses (ChatGPT, Gemini, etc).</p>
+      </div>
+      <div class="ai-card">
+        <h4 style="color: var(--primary);">2. Competitor Benchmarking</h4>
+        <p style="font-size: 0.9rem; margin-top: 8px;">Compare your AI visibility with competitors to modify your campaign strategies effectively.</p>
+      </div>
+      <div class="ai-card">
+        <h4 style="color: var(--primary);">3. Ranking Trend Charts</h4>
+        <p style="font-size: 0.9rem; margin-top: 8px;">Track changes in AI Search Visibility to determine if your optimization strategies are working.</p>
+      </div>
+      <div class="ai-card">
+        <h4 style="color: var(--primary);">4. Daily Shift Alerts</h4>
+        <p style="font-size: 0.9rem; margin-top: 8px;">Receive immediate alerts for significant shifts in AI rankings to make instant content adjustments.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="container section-padding">
+  <div class="text-center">
+    <h2>How We Do It- Our Reputation Management Process</h2>
+  </div>
+  <div class="process-grid">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h4 style="margin-top: 10px;">Assess Reputation</h4>
+      <p style="font-size: 0.9rem; color: var(--muted);">In-depth assessment of threats and opportunities via search results.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h4 style="margin-top: 10px;">Develop Strategy</h4>
+      <p style="font-size: 0.9rem; color: var(--muted);">Creating a customized strategy to meet your brand objectives.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h4 style="margin-top: 10px;">Implement SEO</h4>
+      <p style="font-size: 0.9rem; color: var(--muted);">Creating positive content and implementing SEO tactics.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h4 style="margin-top: 10px;">Restore Reputation</h4>
+      <p style="font-size: 0.9rem; color: var(--muted);">Constant monitoring and addressing negative mentions ongoingly.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-padding" style="background: #fff; border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="text-center" style="margin-bottom: 40px;">
+      <h2>Strengthen & Build Long-term Brand Reputation</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+      <div style="text-align: center;">
+        <h4 style="color: var(--primary);">Small Businesses</h4>
+        <p style="font-size: 0.9rem; color: var(--muted);">Gaining customer trust and brand authority.</p>
+      </div>
+      <div style="text-align: center;">
+        <h4 style="color: var(--primary);">Entrepreneurs</h4>
+        <p style="font-size: 0.9rem; color: var(--muted);">Managing online reach and search results for start-ups.</p>
+      </div>
+      <div style="text-align: center;">
+        <h4 style="color: var(--primary);">Public Figures</h4>
+        <p style="font-size: 0.9rem; color: var(--muted);">Assisting influencers in managing their online image.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container section-padding text-center">
+  <div style="background: var(--hero); color: white; padding: 60px; border-radius: 30px;">
+    <h2 style="margin-bottom: 20px;">Leave All Your Online Reputation Worries On Us!</h2>
+    <p style="opacity: 0.7; margin-bottom: 30px;">Boost your online image and reputation with Helix ORM’s tested and proven services.</p>
+    <a href="contact.html" class="btn">Schedule a Consultation</a>
+  </div>
+</section>
+
+<footer style="background: var(--hero); color: white; padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+  <div class="container text-center">
+    <p style="opacity: 0.6; font-size: 0.9rem;">© 2026 Helix ORM. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
