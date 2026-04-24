@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Reputation Management Service Features & Capabilities | Helix ORM</title>
+  <meta name="description" content="Check out what Helix ORM services offers in terms of reputation management features and capabilities to our clients in boosting their AI visibility.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #8ab44a;
+      --primary-dark: #72953c;
+      --accent: #85c465;
+      --hero: #1a0f2e;
+      --bg: #f9f8fb;
+      --card: #ffffff;
+      --fg: #1c1228;
+      --muted: #6b6478;
+      --border: #e2dcea;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
+    h1,h2,h3,h4,h5 { font-family: 'Space Grotesk', sans-serif; }
+    
+    /* Global Link Fix */
+    a { text-decoration: none !important; color: inherit; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    .text-center { text-align: center; }
+    .section-label { color: var(--primary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.75rem; }
+    
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 30px; border-radius: 999px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; cursor: pointer; border: none; transition: 0.3s; font-size: 0.9rem; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+
+    /* NAVBAR */
+    nav { background: var(--hero); padding: 0 2rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; }
+    .logo-text { color: white; font-weight: 700; font-size: 1.2rem; }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-links a { color: rgba(255,255,255,0.7); padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; text-decoration: none !important; }
+    .nav-links a:hover { color: white; background: rgba(255,255,255,0.05); }
+    .nav-links a.active { color: var(--primary); }
+
+    /* FEATURES HERO */
+    .features-hero { background: var(--hero); padding: 100px 0 80px; color: white; position: relative; overflow: hidden; }
+    .features-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin-bottom: 1.5rem; max-width: 850px; line-height: 1.2; }
+    .features-hero p { color: rgba(255,255,255,0.6); font-size: 1.1rem; max-width: 700px; }
+
+    /* INTRO BOX */
+    .intro-section { padding-top: 0; margin-top: -50px; position: relative; z-index: 5; }
+    .intro-box { background: white; padding: 3rem; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+    .intro-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; align-items: center; }
+
+    /* FEATURES GRID */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    .feature-card { background: white; border: 1px solid var(--border); padding: 2rem; border-radius: 20px; transition: 0.3s; display: flex; flex-direction: column; }
+    .feature-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(138,180,74,0.1); }
+    .feature-num { font-size: 2.5rem; font-weight: 800; color: rgba(138,180,74,0.1); font-family: 'Space Grotesk', sans-serif; line-height: 1; margin-bottom: 10px; }
+    .feature-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: var(--fg); }
+    .feature-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; flex-grow: 1; }
+    .feature-list { list-style: none; }
+    .feature-list li { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; color: var(--fg); }
+    .feature-list li::before { content: '✓'; color: var(--primary); font-weight: bold; }
+
+    /* FOOTER */
+    footer { background: var(--hero); color: white; padding: 5rem 2rem 2rem; margin-top: 5rem; }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+    .footer-about { color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.7; margin-top: 1.5rem; max-width: 320px; }
+    .footer-heading { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: white; margin-bottom: 1.5rem; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a { color: rgba(255,255,255,0.5); font-size: 0.9rem; transition: 0.2s; text-decoration: none !important; }
+    .footer-links a:hover { color: var(--primary); }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+    .footer-copy { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+
+    @media (max-width: 992px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .intro-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .features-grid, .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-icon">H</div>
+      <span class="logo-text">Helix ORM</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="features.html" class="active">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <button class="btn btn-primary" style="padding: 10px 24px;">Get Started</button>
+  </div>
+</nav>
+
+<header class="features-hero">
+  <div class="container">
+    <span class="section-label" style="color: var(--accent);">Our Service Features</span>
+    <h1>Powerful Features for Your Brand’s Growth & Visibility</h1>
+    <p>Improve your brand's visibility and online growth with Helix ORM's integrated reputation solutions.</p>
+  </div>
+</header>
+
+<section class="intro-section">
+  <div class="container">
+    <div class="intro-box">
+      <div class="intro-grid">
+        <h2 style="font-size: 1.8rem; line-height: 1.3;">Dominate Reddit & Control Your Online Reputation</h2>
+        <p style="color: var(--muted); font-size: 1rem;">Traditional SEO is no longer enough. We help you control how your brand is displayed online across AI search tools, community platforms, and review sites using data-driven analysis and strategic monitoring.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 80px 0;">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">Capabilities</span>
+      <h2 style="font-size: 2.2rem;">How We Generate Measurable Growth?</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-num">01</span>
+        <h3 class="feature-title">Reddit Brand Mentions</h3>
+        <p class="feature-desc">Organically integrate your brand into relevant, high-traffic Reddit communities where customers look for solutions.</p>
+        <ul class="feature-list">
+          <li>Entrepreneur Mentions</li>
+          <li>Subreddit Targeting</li>
+          <li>Organic Upvotes</li>
+          <li>AMA Strategies</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <span class="feature-num">02</span>
+        <h3 class="feature-title">AI Search Visibility</h3>
+        <p class="feature-desc">Manage how you appear in responses from AI tools like ChatGPT, Perplexity AI, Gemini, and Claude.</p>
+        <ul class="feature-list">
+          <li>ChatGPT Rankings</li>
+          <li>Perplexity Visibility</li>
+          <li>AI Citation Tracking</li>
+          <li>Competitor Benchmarks</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <span class="feature-num">03</span>
+        <h3 class="feature-title">Review Platform Authority</h3>
+        <p class="feature-desc">Grow and optimize your reviews across major platforms to build trust and increase overall brand authority.</p>
+        <ul class="feature-list">
+          <li>Google Reviews</li>
+          <li>Trustpilot Management</li>
+          <li>Optimizing Ratings</li>
+          <li>Professional Responses</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <span class="feature-num">04</span>
+        <h3 class="feature-title">Reputation Protection</h3>
+        <p class="feature-desc">Daily monitoring to minimize negative press, misinformation, and offensive search results proactively.</p>
+        <ul class="feature-list">
+          <li>24/7 Monitoring</li>
+          <li>Crisis Management</li>
+          <li>SERP Suppression</li>
+          <li>Instant Brand Alerts</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <span class="feature-num">05</span>
+        <h3 class="feature-title">Powerful Reporting</h3>
+        <p class="feature-desc">Advanced data transparency with actionable insights and clear performance metrics for stakeholders.</p>
+        <ul class="feature-list">
+          <li>Custom Dashboards</li>
+          <li>ROI Metrics</li>
+          <li>Client Reporting</li>
+          <li>Data Intelligence Export</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <span class="feature-num">06</span>
+        <h3 class="feature-title">Citation Intelligence</h3>
+        <p class="feature-desc">Identify new opportunities for exposure by analyzing domains that AI systems trust as sources.</p>
+        <ul class="feature-list">
+          <li>Source Analysis</li>
+          <li>Gap Identification</li>
+          <li>Authority Insights</li>
+          <li>Competitor Citations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo">
+        <div class="logo-icon">H</div>
+        <span class="logo-text">Helix ORM</span>
+      </div>
+      <p class="footer-about">Helix ORM is a leading online reputation management agency assisting businesses in gaining a positive brand image and better AI visibility.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Quick Links</div>
+      <ul class="footer-links">
+        <li><a href="features.html">Features</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Services</div>
+      <ul class="footer-links">
+        <li><a href="#">Brand Mentions</a></li>
+        <li><a href="#">Review Management</a></li>
+        <li><a href="#">AI Visibility</a></li>
+        <li><a href="#">Reputation Protection</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Support</div>
+      <p style="color:rgba(255,255,255,0.5); font-size: 0.9rem; margin-bottom: 1rem;">info@helixorm.com</p>
+      <button class="btn btn-primary" style="padding: 8px 20px; font-size: 0.8rem;">Contact Us</button>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Helix ORM. All rights reserved.</span>
+    <div style="display: flex; gap: 20px;">
+      <a href="#" class="footer-copy" style="text-decoration:none !important;">Privacy Policy</a>
+      <a href="#" class="footer-copy" style="text-decoration:none !important;">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
