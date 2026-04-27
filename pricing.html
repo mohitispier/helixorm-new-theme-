@@ -7,6 +7,62 @@
   <meta name="description" content="Check out Helix ORM’s online reputation management pricing plans available at budget-friendly costs. Get a custom ORM plan that meets your needs.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    /* --- CSS: <style> tag ke andar sabse niche add karein --- */
+
+/* Hamburger default mein hide rahega desktop par */
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* Menu icon ko mobile par show karein */
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+  }
+
+  /* Nav Links ko default mein 'none' kar dein taaki bina click na dikhe */
+  .nav-links {
+    display: none !important; 
+    flex-direction: column;
+    position: absolute;
+    top: 72px; 
+    left: 0;
+    width: 100%;
+    background: #1a0f2e; /* Helix Purple Theme[cite: 1] */
+    padding: 20px 0;
+    text-align: center;
+    z-index: 1000;
+  }
+
+  /* Jab JS 'active' class lagayega tab menu dikhega */
+  .nav-links.active {
+    display: flex !important;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 15px;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .mobile-btn {
+    margin: 15px auto;
+    width: 80% !important;
+  }
+}
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --primary: #8ab44a;
@@ -72,21 +128,31 @@
 
 <nav>
   <div class="nav-inner">
-    <a href="index.html" class="logo">
+    <div class="logo">
       <div class="logo-icon">H</div>
-      <span style="font-weight:700">Helix ORM</span>
-    </a>
-    <div class="nav-links">
+      <span class="logo-text">Helix ORM</span>
+    </div>
+    
+    <!-- Hamburger Icon: Is par click karne se menu khulega -->
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Mobile Menu: Default mein ye hide rahega -->
+    <div class="nav-links" id="mobileMenu">
       <a href="/">Home</a>
       <a href="/services">Services</a>
       <a href="/features">Features</a>
-      <a href="/pricing" class="active">Pricing</a>
+      <a href="/pricing">Pricing</a>
       <a href="/team">Team</a>
-      <a href="/#contact">Contact</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="btn btn-primary mobile-btn">Get Started</a>
     </div>
-    <a href="/#contact" class="btn" style="padding: 8px 20px;">Get Started</a>
   </div>
 </nav>
+
 
 <header class="hero">
   <div class="container">
@@ -352,5 +418,24 @@
     </div>
   </div>
 </footer>
+  <!-- Yeh script tag </body> se pehle hona chahiye -->
+<script>
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    // 'active' class ko toggle karega (hide/show)
+    menu.classList.toggle('active');
+}
+
+// Mobile par link click karte hi menu khud band ho jaye
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        const menu = document.getElementById('mobileMenu');
+        if(menu.classList.contains('active')) {
+            menu.classList.remove('active');
+        }
+    });
+});
+</script>
+
 </body>
 </html>
