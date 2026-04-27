@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helix ORM — Online Reputation Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+  /* Desktop view me hamburger hide rahega */
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .nav-inner {
+    position: relative;
+    justify-content: space-between;
+  }
+
+  /* Hamburger Icon Styling */
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+  }
+
+  /* Default Hidden State: Bina click ke nahi dikhega */
+  .nav-links {
+    display: none !important; 
+    flex-direction: column;
+    position: absolute;
+    top: 72px; /* Navbar ki height ke niche */
+    left: 0;
+    width: 100%;
+    background: #1a0f2e; /* Helix Purple Theme[cite: 1] */
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+  }
+
+  /* Active Class: Jab click hoga tab ye apply hoga */
+  .nav-links.active {
+    display: flex !important;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 15px;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .mobile-btn {
+    margin: 15px auto;
+    width: 80%;
+  }
+}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #8ab44a;
+      --primary-dark: #72953c;
+      --accent: #85c465;
+      --hero: #1a0f2e;
+      --bg: #f9f8fb;
+      --card: #ffffff;
+      --fg: #1c1228;
+      --muted: #6b6478;
+      --border: #e2dcea;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); }
+    h1,h2,h3,h4,h5 { font-family: 'Space Grotesk', sans-serif; }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav { background: var(--hero); padding: 0 2rem; position: sticky; top: 0; z-index: 100; }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem; font-family: 'Space Grotesk', sans-serif; }
+    .logo-text { color: white; font-weight: 700; font-size: 1.2rem; }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-links a { color: rgba(255,255,255,0.7); padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; transition: color 0.2s; }
+    .nav-links a:hover { color: white; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; border-radius: 999px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; cursor: pointer; border: none; font-size: 0.9rem; transition: opacity 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; }
+
+    /* HERO */
+    .hero { background: var(--hero); padding: 120px 2rem 80px; overflow: hidden; position: relative; }
+    .hero::before { content: ''; position: absolute; top: 25%; left: 20%; width: 400px; height: 400px; background: rgba(138,180,74,0.08); border-radius: 50%; filter: blur(80px); }
+    .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: rgba(138,180,74,0.1); border: 1px solid rgba(138,180,74,0.2); color: var(--primary); font-size: 0.85rem; font-weight: 500; margin-bottom: 2rem; }
+    .hero h1 { color: white; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.15; margin-bottom: 1.5rem; }
+    .hero h1 span { background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: rgba(255,255,255,0.6); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; max-width: 480px; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .hero-tags { display: flex; gap: 1.5rem; color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+    .hero-tag { display: flex; align-items: center; gap: 6px; }
+    .hero-tag::before { content: '⚡'; color: var(--primary); }
+
+    /* REDDIT CARDS */
+    .reddit-cards { display: flex; flex-direction: column; gap: 12px; }
+    .reddit-header, .reddit-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; }
+    .reddit-header-top { display: flex; justify-content: space-between; align-items: center; }
+    .reddit-brand { display: flex; align-items: center; gap: 10px; }
+    .reddit-icon { width: 32px; height: 32px; border-radius: 50%; background: #ff4500; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.75rem; }
+    .reddit-name { color: white; font-size: 0.875rem; font-weight: 600; }
+    .reddit-sub { color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+    .live-dot { display: flex; align-items: center; gap: 6px; color: #4ade80; font-size: 0.75rem; font-weight: 500; }
+    .live-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; display: inline-block; }
+    .reddit-card { display: flex; gap: 12px; }
+    .votes { display: flex; flex-direction: column; align-items: center; gap: 4px; color: white; font-weight: 600; font-size: 0.875rem; }
+    .vote-arrow { color: var(--primary); font-size: 1rem; }
+    .card-title { color: white; font-size: 0.875rem; font-weight: 500; margin-bottom: 8px; }
+    .card-meta { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+    .badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; }
+    .badge-orange { background: rgba(249,115,22,0.2); color: #fb923c; }
+    .badge-green { background: rgba(138,180,74,0.2); color: var(--primary); }
+    .badge-red { background: rgba(239,68,68,0.2); color: #f87171; }
+
+    /* SECTIONS */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-label { color: var(--primary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.75rem; }
+    .section-title { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; color: var(--fg); margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); max-width: 600px; margin: 0 auto 3rem; text-align: center; line-height: 1.7; }
+    .text-center { text-align: center; }
+
+    /* STATS BAR */
+    .stats-bar { background: var(--hero); border-top: 1px solid rgba(255,255,255,0.05); padding: 3rem 2rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; max-width: 1200px; margin: 0 auto; text-align: center; }
+    .stat-value { font-size: 2.25rem; font-weight: 700; background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Space Grotesk', sans-serif; }
+    .stat-label { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: 4px; }
+
+    /* INTELLIGENCE */
+    .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 3rem; }
+    .tab-btn { padding: 10px 20px; border-radius: 999px; font-size: 0.875rem; font-weight: 500; border: none; cursor: pointer; background: #ede9f4; color: var(--muted); transition: all 0.2s; }
+    .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(138,180,74,0.3); }
+    .intel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .intel-img { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
+    .intel-img img { width: 100%; display: block; }
+    .intel-features { list-style: none; margin: 1.5rem 0; display: flex; flex-direction: column; gap: 12px; }
+    .intel-features li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--fg); }
+    .check-dot { width: 20px; height: 20px; border-radius: 50%; background: rgba(138,180,74,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--primary); font-size: 0.75rem; }
+
+    /* FEATURES GRID */
+    .features-bg { background: #f3f0f8; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .feature-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); transition: border-color 0.2s, box-shadow 0.2s; }
+    .feature-card:hover { border-color: rgba(138,180,74,0.3); box-shadow: 0 8px 30px rgba(138,180,74,0.06); }
+    .feature-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .feature-num { font-size: 2rem; font-weight: 700; color: rgba(0,0,0,0.08); font-family: 'Space Grotesk', sans-serif; }
+    .feature-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(138,180,74,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .feature-title { font-size: 1rem; font-weight: 700; color: var(--fg); margin-bottom: 0.5rem; }
+    .feature-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; background: #f3f0f8; color: var(--muted); }
+
+    /* WHY */
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .pillar-card { background: white; border-radius: 16px; padding: 1.25rem; border: 1px solid var(--border); }
+    .pillar-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(138,180,74,0.1); margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .pillar-title { font-weight: 600; font-size: 0.9rem; color: var(--fg); margin-bottom: 0.4rem; }
+    .pillar-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+    .why-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+    .why-stat { text-align: center; padding: 1rem; background: #f3f0f8; border-radius: 12px; }
+    .why-stat-value { font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Space Grotesk', sans-serif; }
+    .why-stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .bullet-list { display: flex; flex-direction: column; gap: 12px; margin-top: 1.5rem; }
+    .bullet { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; }
+    .bullet-dot { width: 20px; height: 20px; border-radius: 50%; background: rgba(138,180,74,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; color: var(--primary); font-size: 0.75rem; }
+
+    /* PRICING */
+    .pricing-bg { background: #f3f0f8; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+    .price-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); position: relative; }
+    .price-card.popular { border-color: var(--primary); box-shadow: 0 10px 40px rgba(138,180,74,0.12); transform: scale(1.02); }
+    .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; font-size: 0.7rem; font-weight: 600; padding: 4px 14px; border-radius: 999px; white-space: nowrap; font-family: 'Space Grotesk', sans-serif; }
+    .plan-name { font-weight: 700; font-size: 1.1rem; color: var(--fg); }
+    .plan-subtitle { color: var(--primary); font-size: 0.875rem; font-weight: 500; margin-top: 2px; }
+    .plan-best { color: var(--muted); font-size: 0.75rem; margin-top: 4px; margin-bottom: 1.25rem; }
+    .plan-price { font-size: 1.75rem; font-weight: 700; color: var(--fg); font-family: 'Space Grotesk', sans-serif; }
+    .plan-period { color: var(--muted); font-size: 0.85rem; }
+    .plan-features { list-style: none; margin: 1.25rem 0 1.5rem; display: flex; flex-direction: column; gap: 10px; }
+    .plan-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.875rem; color: var(--fg); }
+    .plan-features li::before { content: '✓'; color: var(--primary); flex-shrink: 0; font-weight: 700; }
+    .addons-box { background: white; border-radius: 16px; padding: 2rem; border: 1px solid var(--border); text-align: center; }
+    .addons-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 1.5rem; }
+    .addons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+    .addon { display: flex; align-items: center; gap: 8px; }
+    .addon-price { font-weight: 700; color: var(--primary); font-size: 1.1rem; font-family: 'Space Grotesk', sans-serif; }
+    .addon-label { color: var(--muted); font-size: 0.875rem; }
+
+    /* TESTIMONIALS */
+    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .testimonial-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); }
+    .quote-icon { font-size: 2rem; color: rgba(138,180,74,0.2); margin-bottom: 1rem; }
+    .quote-text { font-size: 0.875rem; line-height: 1.7; color: var(--fg); margin-bottom: 1.5rem; }
+    .reviewer { display: flex; align-items: center; gap: 12px; }
+    .reviewer-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.75rem; font-family: 'Space Grotesk', sans-serif; }
+    .reviewer-name { font-weight: 600; font-size: 0.9rem; color: var(--fg); }
+
+    /* FAQ */
+    .faq-bg { background: #f3f0f8; }
+    .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item { background: white; border-radius: 14px; padding: 1.25rem 1.5rem; border: 1px solid var(--border); }
+    .faq-q { font-weight: 600; font-size: 0.95rem; color: var(--fg); margin-bottom: 0.5rem; font-family: 'Space Grotesk', sans-serif; }
+    .faq-a { font-size: 0.875rem; color: var(--muted); line-height: 1.7; }
+
+    /* CONTACT */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .contact-email-box { display: flex; align-items: center; gap: 12px; padding: 1rem; background: #f3f0f8; border-radius: 12px; margin-top: 1.5rem; }
+    .email-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(138,180,74,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.1rem; }
+    .contact-form { background: white; border-radius: 20px; padding: 2rem; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.06); }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--fg); margin-bottom: 6px; }
+    .form-input, .form-textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.875rem; font-family: 'Inter', sans-serif; background: #f9f8fb; color: var(--fg); outline: none; transition: border-color 0.2s; }
+    .form-input:focus, .form-textarea:focus { border-color: var(--primary); }
+    .form-textarea { height: 100px; resize: none; }
+
+    /* FOOTER */
+    footer { background: var(--hero); color: white; padding: 4rem 2rem 2rem; }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+    .footer-about { color: rgba(255,255,255,0.5); font-size: 0.875rem; line-height: 1.7; margin-top: 1rem; }
+    .footer-heading { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.8); margin-bottom: 1rem; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: rgba(255,255,255,0.5); font-size: 0.875rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .footer-copy { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+    .footer-policy { display: flex; gap: 1.5rem; }
+    .footer-policy a { color: rgba(255,255,255,0.4); font-size: 0.85rem; transition: color 0.2s; }
+
+    @media (max-width: 900px) {
+      .hero-inner, .intel-grid, .why-grid, .contact-grid, .footer-grid { grid-template-columns: 1fr; }
+      .features-grid, .pricing-grid, .testimonial-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .price-card.popular { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-icon">H</div>
+      <span class="logo-text">Helix ORM</span>
+    </div>
+    
+    <!-- 3-line Menu Icon -->
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Links Jo default me hide rahenge -->
+    <div class="nav-links" id="mobileMenu">
+      <a href="#">Home</a>
+      <a href="#services">Services</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#team">Team</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="btn btn-primary mobile-btn">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">📡 Reddit Brand Domination</div>
+      <h1>Dominate Reddit.<br/>Own Your Reputation.<br/><span>Own Your Reputation.</span></h1>
+      <p>We strategically place your brand in authentic Reddit conversations, building organic trust and visibility where real buying decisions get made. AI-powered monitoring, 24/7.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary">Get Started Today →</button>
+        <button class="btn btn-outline">Explore Services</button>
+      </div>
+      <div class="hero-tags">
+        <div class="hero-tag">Authentic engagement</div>
+        <div class="hero-tag">AI-powered</div>
+        <div class="hero-tag">Real trust</div>
+      </div>
+    </div>
+    <div class="reddit-cards">
+      <div class="reddit-header">
+        <div class="reddit-header-top">
+          <div class="reddit-brand">
+            <div class="reddit-icon">R</div>
+            <div><div class="reddit-name">r/YourBrand</div><div class="reddit-sub">Live monitoring</div></div>
+          </div>
+          <div class="live-dot">LIVE</div>
+        </div>
+      </div>
+      <div class="reddit-card">
+        <div class="votes"><span class="vote-arrow">▲</span>2.8k</div>
+        <div><div class="card-title">Tried Helix ORM for 30 days — here's what happened</div><div class="card-meta"><span>r/entrepreneur</span><span>·</span><span>3h</span><span class="badge badge-orange">Trending</span></div></div>
+      </div>
+      <div class="reddit-card">
+        <div class="votes"><span class="vote-arrow">▲</span>1.9k</div>
+        <div><div class="card-title">How I went from 2-star avg to 4.8 in 3 months</div><div class="card-meta"><span>r/marketing</span><span>·</span><span>7h</span><span class="badge badge-green">Top</span></div></div>
+      </div>
+      <div class="reddit-card">
+        <div class="votes"><span class="vote-arrow">▲</span>4.2k</div>
+        <div><div class="card-title">This service completely changed how our brand is perceived</div><div class="card-meta"><span>r/smallbusiness</span><span>·</span><span>12h</span><span class="badge badge-red">Hot</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div><div class="stat-value">97%</div><div class="stat-label">Visibility</div></div><div><div class="stat-value">550+</div><div class="stat-label">Brands</div></div><div><div class="stat-value">24/7</div><div class="stat-label">Monitoring</div></div><div><div class="stat-value">52%</div><div class="stat-label">Avg Rating Increase</div></div>
+  </div>
+</div>
+
+<!-- INTELLIGENCE SECTION -->
+<section style="background: var(--bg);">
+  <div class="container">
+    <div class="text-center" style="margin-bottom: 3rem;">
+      <span class="section-label">Reddit Intelligence</span>
+      <h2 class="section-title">AI-Powered Brand Intelligence</h2>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active">AI Search Visibility Tracking</button><button class="tab-btn ">Prompt Tracking</button><button class="tab-btn ">Powerful Reporting</button><button class="tab-btn ">Citation Intelligence</button>
+    </div>
+    <div class="intel-grid">
+      <div>
+        <h3 style="font-size:1.6rem;font-weight:700;color:var(--fg);margin-bottom:1rem;">AI Search Visibility Tracking</h3>
+        <p style="color:var(--muted);line-height:1.7;font-size:0.95rem;">Track your visibility score across ChatGPT, Perplexity, Gemini, and Claude. Benchmark against competitors and monitor ranking shifts over time in real-time dashboards.</p>
+        <ul class="intel-features">
+          <li><div class="check-dot">✓</div>LLM visibility scoring</li><li><div class="check-dot">✓</div>Competitor benchmarking</li><li><div class="check-dot">✓</div>Ranking trend charts</li><li><div class="check-dot">✓</div>Daily shift alerts</li>
+        </ul>
+        <a href="#" style="color:var(--primary);font-weight:600;font-size:0.9rem;">Learn more →</a>
+      </div>
+      <div class="intel-img">
+        <img src="https://cdn.sanity.io/images/tkl0o0xu/production/bca4f03e49717ec12587a403a3da8a765677f4c2-2251x2251.png" alt="AI Search Visibility Tracking" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES GRID -->
+<section class="features-bg">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3rem;">
+      <span class="section-label">Powerful Features</span>
+      <h2 class="section-title">Powerful Features for Brand Growth</h2>
+      <p class="section-sub">Everything you need to dominate Reddit and control your online reputation.</p>
+    </div>
+    <div class="features-grid">
+      
+      <div class="feature-card">
+        <div class="feature-top">
+          <span class="feature-num">01</span>
+          
+        </div>
+        <div class="feature-title">Reddit Brand Mentions</div>
+        <div class="feature-desc">We place your brand organically in high-traffic Reddit threads and subreddits where your target audience actively makes buying decisions.</div>
+        <div class="tags"><span class="tag">r/Entrepreneur mentions</span><span class="tag">Subreddit targeting</span><span class="tag">Organic upvotes</span><span class="tag">AMA strategies</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-top">
+          <span class="feature-num">02</span>
+          
+        </div>
+        <div class="feature-title">AI Search Visibility</div>
+        <div class="feature-desc">Track and boost your brand visibility across ChatGPT, Perplexity, Gemini, and Claude. Benchmark against competitors and monitor ranking shifts.</div>
+        <div class="tags"><span class="tag">ChatGPT rankings</span><span class="tag">Perplexity visibility</span><span class="tag">AI citation tracking</span><span class="tag">Competitor benchmarks</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-top">
+          <span class="feature-num">03</span>
+          
+        </div>
+        <div class="feature-title">Review Platform Authority</div>
+        <div class="feature-desc">Generate and manage reviews that build, optimize, and protect your brand ratings across every major review platform for maximum credibility.</div>
+        <div class="tags"><span class="tag">Google reviews</span><span class="tag">Trustpilot management</span><span class="tag">Rating optimization</span><span class="tag">Review responses</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-top">
+          <span class="feature-num">04</span>
+          
+        </div>
+        <div class="feature-title">Reputation Protection</div>
+        <div class="feature-desc">Monitor, suppress, and neutralize negative content across the internet before it damages your brand and impacts your bottom line.</div>
+        <div class="tags"><span class="tag">24/7 monitoring</span><span class="tag">Crisis management</span><span class="tag">Negative suppression</span><span class="tag">Brand alerts</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-top">
+          <span class="feature-num">05</span>
+          
+        </div>
+        <div class="feature-title">Powerful Reporting</div>
+        <div class="feature-desc">Shareable reports for stakeholders and clients. Export visibility trends, citation data, and engagement ROI in beautiful dashboards.</div>
+        <div class="tags"><span class="tag">Custom dashboards</span><span class="tag">ROI metrics</span><span class="tag">Client reports</span><span class="tag">Data export</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-top">
+          <span class="feature-num">06</span>
+          
+        </div>
+        <div class="feature-title">Citation Intelligence</div>
+        <div class="feature-desc">See which domains AI models cite for your category. Find gaps where competitors appear and you don't, then close them fast.</div>
+        <div class="tags"><span class="tag">Source analysis</span><span class="tag">Gap identification</span><span class="tag">Domain authority</span><span class="tag">Competitor intel</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY SECTION -->
+<section style="background: var(--bg);">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <span class="section-label">Why Helix ORM</span>
+        <h2 class="section-title">From Reddit Mentions to Full Reputation Control</h2>
+        <p style="color:var(--muted);line-height:1.7;margin-bottom:1rem;">Reddit is where real conversations happen and buying decisions are made. Helix ORM gets your brand into the most influential threads, subreddits, and discussions — organically, authentically, and at scale.</p>
+        <p style="color:var(--muted);line-height:1.7;">Our AI monitors 24/7 to identify brand mentions, flag negative content, and give you actionable steps to build an unshakeable online reputation.</p>
+        <div class="bullet-list">
+          <div class="bullet"><div class="bullet-dot">✓</div><span>Authentic Reddit brand mentions that drive real traffic.</span></div>
+          <div class="bullet"><div class="bullet-dot">✓</div><span>AI-powered monitoring catches threats before they spread.</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="pillar-grid">
+          
+          <div class="pillar-card">
+           
+            <div class="pillar-title">24/7 Monitoring</div>
+            <div class="pillar-desc">We monitor what people say about your brand and pinpoint negative content before it affects your business.</div>
+          </div>
+          <div class="pillar-card">
+           
+            <div class="pillar-title">AI-Powered Analysis</div>
+            <div class="pillar-desc">Uses AI technology to analyze your content and provides actionable insights for reputation growth.</div>
+          </div>
+          <div class="pillar-card">
+           
+            <div class="pillar-title">Proven ORM Methods</div>
+            <div class="pillar-desc">Strategies proven to be effective in boosting your growth, authority, and search rankings.</div>
+          </div>
+          <div class="pillar-card">
+          
+            <div class="pillar-title">Custom Processes</div>
+            <div class="pillar-desc">We develop processes unique for each client — not random reports, but tailored reputation strategies.</div>
+          </div>
+        </div>
+        <div class="why-stats">
+          
+          <div class="why-stat">
+            <div class="why-stat-value">97%</div>
+            <div class="why-stat-label">Customer Satisfaction</div>
+          </div>
+          <div class="why-stat">
+            <div class="why-stat-value">550+</div>
+            <div class="why-stat-label">Happy Customers</div>
+          </div>
+          <div class="why-stat">
+            <div class="why-stat-value">52%</div>
+            <div class="why-stat-label">Average Rating Increase</div>
+          </div>
+          <div class="why-stat">
+            <div class="why-stat-value">91%</div>
+            <div class="why-stat-label">Client Retention Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-bg" id="pricing">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3rem;">
+      <span class="section-label">Pricing</span>
+      <h2 class="section-title">Simple & Scalable Plans</h2>
+      <p class="section-sub">Choose the plan that matches your reputation needs, from basic monitoring to full-scale damage control and brand growth.</p>
+    </div>
+    <div class="pricing-grid">
+      
+      <div class="price-card ">
+        
+        <div class="plan-name">Starter Plan</div>
+        <div class="plan-subtitle">"Foundation"</div>
+        <div class="plan-best">Best for: Individuals / small businesses</div>
+        <div style="margin-bottom:1.25rem;"><span class="plan-price">$99 – $299</span><span class="plan-period">/month</span></div>
+        <ul class="plan-features">
+          <li>2 Brand Mentions — Reddit</li><li>2 Brand Mentions — Quora</li><li>2 Trustpilot Reviews</li><li>2 Google Reviews</li><li>2 Content Backlinks On High Authority Websites</li><li>Detailed Reports</li>
+        </ul>
+        <button class="btn " style="background:#ede9f4;color:var(--fg);width:100%;justify-content:center;">Get Started</button>
+      </div>
+      <div class="price-card popular">
+        <div class="popular-badge"> MOST POPULAR</div>
+        <div class="plan-name">Growth Plan</div>
+        <div class="plan-subtitle">"Reputation Builder"</div>
+        <div class="plan-best">Best for: Growing brands and Startups</div>
+        <div style="margin-bottom:1.25rem;"><span class="plan-price">$300 – $800</span><span class="plan-period">/month</span></div>
+        <ul class="plan-features">
+          <li>5 Brand Mentions — Reddit</li><li>5 Brand Mentions — Quora</li><li>5 Trustpilot Reviews</li><li>5 Google Reviews</li><li>5 Content Backlinks On High Authority Websites</li><li>Detailed Reports</li>
+        </ul>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;">Get Started</button>
+      </div>
+      <div class="price-card ">
+        
+        <div class="plan-name">Premium Plan</div>
+        <div class="plan-subtitle">"Brand Authority"</div>
+        <div class="plan-best">Best for: Businesses serious about reputation</div>
+        <div style="margin-bottom:1.25rem;"><span class="plan-price">$1000 – $3000+</span><span class="plan-period">/month</span></div>
+        <ul class="plan-features">
+          <li>5 Brand Mentions — Reddit</li><li>5 Brand Mentions — Quora</li><li>5 Trustpilot Reviews</li><li>5 Google Reviews</li><li>5 Content Backlinks On High Authority Websites</li><li>Detailed Reports</li>
+        </ul>
+        <button class="btn " style="background:#ede9f4;color:var(--fg);width:100%;justify-content:center;">Get Started</button>
+      </div>
+    </div>
+    <div class="addons-box">
+      <div class="addons-title">Pay Only For What You Use!</div>
+      <div class="addons-list">
+        <div class="addon"><span class="addon-price">$10</span><span class="addon-label">— Per Comment</span></div><div class="addon"><span class="addon-price">$15</span><span class="addon-label">— Per Review</span></div><div class="addon"><span class="addon-price">$20</span><span class="addon-label">— Per Mention</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" style="background:var(--bg);">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3rem;">
+      <span class="section-label">Testimonials</span>
+      <h2 class="section-title">Trusted by Brands Focused on Their Online Image</h2>
+    </div>
+    <div class="testimonial-grid">
+      
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <div class="quote-text">Helix ORM cleaned up our search results in weeks. One negative article used to dominate our name on Google. After just two months with Helix ORM, it's pushed down and buried behind positive content we control. Our leads have noticeably increased.</div>
+        <div class="reviewer">
+          <div class="reviewer-avatar">JJ</div>
+          <div class="reviewer-name">Jonathan Joshan</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <div class="quote-text">We finally have a system for managing reviews at scale. As a growing local business, negative reviews were slipping through the cracks. Helix ORM helped us respond faster, professionally, and consistently. Our average rating has gone up.</div>
+        <div class="reviewer">
+          <div class="reviewer-avatar">AD</div>
+          <div class="reviewer-name">Alizeh Devilliers</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <div class="quote-text">AI-assisted reputation management that actually feels human. We were skeptical about an "AI ORM" tool, but Helix ORM gave us smart, on-brand suggestions we could tweak and send. It cut our response time in half.</div>
+        <div class="reviewer">
+          <div class="reviewer-avatar">TS</div>
+          <div class="reviewer-name">Timothy Schneider</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-bg" id="faq">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3rem;">
+      <span class="section-label">FAQ</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list">
+      
+      <div class="faq-item">
+        <div class="faq-q">What is Online Reputation Management (ORM)?</div>
+        <div class="faq-a">ORM is the practice of monitoring, managing, and improving how your brand appears online across search engines, social media, review platforms, and forums. Helix ORM helps ensure that positive, authentic content defines your brand's digital presence.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How does Helix ORM place brand mentions on Reddit?</div>
+        <div class="faq-a">We organically integrate your brand into relevant, high-traffic Reddit conversations. Our team identifies the right subreddits and threads, creating authentic mentions that resonate with real users and drive trust.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What is AI Search Visibility Tracking?</div>
+        <div class="faq-a">It measures how your brand appears in AI-generated search results from tools like ChatGPT, Perplexity, Gemini, and Claude. We track your visibility score, benchmark against competitors, and provide daily shift alerts.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How long does it take to see results?</div>
+        <div class="faq-a">Most clients see noticeable improvements within 30-60 days. However, comprehensive reputation building is an ongoing process, and the best results come from sustained, long-term efforts.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can you remove negative content from the internet?</div>
+        <div class="faq-a">We use a combination of direct removal requests and SEO suppression strategies to push negative content down in search results. While we can't guarantee removal of every piece of content, we significantly reduce its visibility.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do you offer custom pricing for enterprise clients?</div>
+        <div class="faq-a">Yes! Our Premium Plan can be tailored to enterprise needs. Contact us for a custom quote based on your specific reputation management requirements.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="background:var(--bg);">
+  <div class="contact-grid">
+    <div>
+      <span class="section-label">Contact Us</span>
+      <h2 class="section-title">Get Started Today!</h2>
+      <p style="color:var(--muted);line-height:1.7;">Have a question? Send us a message, and we will get back to you shortly.</p>
+      <div class="contact-email-box">
+        <div class="email-icon">✉</div>
+        <div>
+          <div style="color:var(--muted);font-size:0.75rem;">Email us at</div>
+          <div style="font-weight:600;font-size:0.9rem;">info@helixorm.com</div>
+        </div>
+      </div>
+    </div>
+    <form class="contact-form" onsubmit="return false;">
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" placeholder="Your name" /></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="you@example.com" /></div>
+      <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" placeholder="Tell us about your reputation needs"></textarea></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo">
+        <div class="logo-icon">H</div>
+        <span class="logo-text">Helix ORM</span>
+      </div>
+      <p class="footer-about">Helix ORM is a leading online reputation management and authority-building agency assisting businesses in gaining a positive brand image and a better reputation.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Quick Links</div>
+      <ul class="footer-links">
+        <li><a href="#">Features</a></li><li><a href="#">Services</a></li><li><a href="#">Pricing</a></li><li><a href="#">Testimonials</a></li><li><a href="#">FAQ</a></li><li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Services</div>
+      <ul class="footer-links">
+        <li><a href="#">Brand Mentions</a></li><li><a href="#">Review Management</a></li><li><a href="#">Content Strategy</a></li><li><a href="#">Reputation Building</a></li><li><a href="#">SEO Optimization</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Contact</div>
+      <p style="color:rgba(255,255,255,0.5);font-size:0.875rem;">info@helixorm.com</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Helix ORM. All rights reserved.</span>
+    <div class="footer-policy">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+const supabaseClient = supabase.createClient(
+  "https://gwfwsvwqgyjhdtephfxr.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3ZndzdndxZ3lqaGR0ZXBoZnhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyMjE4MTksImV4cCI6MjA5MTc5NzgxOX0.mQop0i-xGrwRbTuk_9mnf5nORSeOfAkY3mdqUWOTBfw"
+);
+
+document.getElementById("contactForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const message = document.getElementById("message").value;
+
+  console.log("Submitting...");
+
+  const { data, error } = await supabaseClient
+    .from("contact_us")
+    .insert([{ name, email, message }]);
+
+  console.log(data, error);
+
+  if (error) {
+    alert("Error: " + error.message);
+  } else {
+    alert("Data Saved ✅");
+  }
+</script>
+<!-- Yeh script tag </body> se pehle hona chahiye -->
+<script>
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    // 'active' class ko toggle karega (hide/show)
+    menu.classList.toggle('active');
+}
+
+// Mobile par link click karte hi menu khud band ho jaye
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        const menu = document.getElementById('mobileMenu');
+        if(menu.classList.contains('active')) {
+            menu.classList.remove('active');
+        }
+    });
+});
+</script>
+</body>
+</html>
