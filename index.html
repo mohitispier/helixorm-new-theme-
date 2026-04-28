@@ -7,32 +7,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
 .marquee-vertical {
-  height: 450px;
+  /* 4 cards + gaps ke liye perfect height */
+  height: 445px !important; 
   overflow: hidden;
   position: relative;
-  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
 
 .marquee-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  animation: scroll-down 25s linear infinite;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 15px !important;
+  /* Animation ko speed 20s rakhein smooth chalne ke liye */
+  animation: infinite-scroll 20s linear infinite !important;
 }
 
-@keyframes scroll-down {
-  0% { transform: translateY(-50%); }
-  100% { transform: translateY(0%); }
+@keyframes infinite-scroll {
+  0% { transform: translateY(0); }
+  /* Ye sabse zaroori hai: -50% par loop seamless ho jata hai */
+  100% { transform: translateY(-50%); } 
 }
 
 .ai-query-card {
+  height: 100px !important; /* Fixed height hamesha */
+  flex-shrink: 0 !important; /* Card ko pichakne se rokne ke liye */
   background: white;
   border-radius: 18px 18px 18px 5px;
-  padding: 15px 25px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   gap: 15px;
-  min-height: 90px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   margin: 0 10px;
 }
