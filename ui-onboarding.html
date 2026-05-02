@@ -1208,7 +1208,11 @@
     }
 
     // Wait for animation to finish, then fill fields
-    setTimeout(() => {
+    setTimeout// Data fill hone ke baad button ko active karein
+const nextBtn = document.getElementById('btn1');
+if (nextBtn) {
+    nextBtn.disabled = false; // Isse button click-able ho jayega
+}(() => {
       loader.classList.remove('show');
 
       // Fill company name
@@ -1342,6 +1346,27 @@
 
   // ── INIT ──────────────────────────────────
   updateRightPanel(0);
+  if (aiData) {
+    // Name fill karein
+    const nameField = document.getElementById('companyNameInput');
+    if (nameField) nameField.value = aiData.companyName || '';
+
+    // Description fill karein
+    const descField = document.getElementById('descriptionInput');
+    if (descField) {
+        descField.value = aiData.description || '';
+        // Character count update karna na bhulein
+        document.getElementById('descCount').innerText = `${descField.value.length}/1600 characters`;
+    }
+
+    // Competitors loop
+    if (aiData.competitors) {
+        aiData.competitors.forEach((comp, index) => {
+            const compInput = document.getElementById(`comp${index}`);
+            if (compInput) compInput.value = comp;
+        });
+    }
+}
 </script>
 </body>
 </html>
