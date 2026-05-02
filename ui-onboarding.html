@@ -1208,11 +1208,32 @@
     }
 
     // Wait for animation to finish, then fill fields
-    setTimeout// Data fill hone ke baad button ko active karein
-const nextBtn = document.getElementById('btn1');
-if (nextBtn) {
-    nextBtn.disabled = false; // Isse button click-able ho jayega
-}(() => {
+  // Wait for animation to finish, then fill fields
+setTimeout(() => {
+      loader.classList.remove('show');
+
+      // Fill company name
+      document.getElementById('companyNameInput').value = aiData.companyName || domain;
+
+      // Fill description
+      if (aiData.description) {
+        const descEl = document.getElementById('descriptionInput');
+        descEl.value = aiData.description;
+        document.getElementById('descCount').textContent = aiData.description.length + '/1600 characters';
+      }
+
+      // Fill competitors
+      if (aiData.competitors && aiData.competitors.length) {
+        ['comp0', 'comp1', 'comp2'].forEach((id, i) => {
+          const el = document.getElementById(id);
+          if (el && aiData.competitors[i]) el.value = aiData.competitors[i];
+        });
+      }
+
+      // Enable continue button and go to step 1
+      document.getElementById('btn1').disabled = false;
+      goStep(1);
+    }, 4500);
       loader.classList.remove('show');
 
       // Fill company name
