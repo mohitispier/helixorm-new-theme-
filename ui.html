@@ -1386,6 +1386,12 @@ setTimeout(() => {
         goStep(1);
     }
 }, 4500);
+    const companyInput = document.getElementById('companyNameInput');
+if (companyInput) {
+    companyInput.value = aiData.companyName;
+    // Yeh line sabse zaroori hai:
+    companyInput.dispatchEvent(new Event('input', { bubbles: true }));
+}
 </script>
 </body>
 </html>
