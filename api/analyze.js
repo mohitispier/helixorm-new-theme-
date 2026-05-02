@@ -24,25 +24,61 @@ export default async function handler(req, res) {
           role: 'user',
           content: `Analyze this company website URL: ${url}
 
-Return ONLY a valid JSON object, no markdown, no explanation, no backticks:
+You MUST return ONLY a raw JSON object. No markdown. No backticks. No explanation. No text before or after. Start your response with { and end with }.
+
 {
-  "companyName": "Company name from the domain",
-  "description": "2-3 sentence professional description of what this company does (150-250 characters total)",
+  "companyName": "Company name derived from the domain (capitalize properly)",
+  "description": "Write 2-3 full sentences (minimum 300 characters) describing what this company does, who it serves, and what makes it unique. Be specific and professional.",
   "competitors": ["https://competitor1.com", "https://competitor2.com", "https://competitor3.com"]
 }
 
-For competitors, list 3 real direct competitors in the same industry. Use full URLs.`
+Rules:
+- description MUST be at least 300 characters long
+- competitors must be 3 real URLs of direct competitors in the same industry
+- Output ONLY the JSON, nothing else`
         }]
       })
     });
 
     const data = await response.json();
-    const text = data.content?.[0]?.text || '{}';
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    const result = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
 
+    // ── DEBUG: Log raw Claude response ──
+    console.log('Claude raw response:', JSON.stringify(data, null, 2));
+
+    const text = data.content?.[0]?.text?.trim() || '';
+
+    // Try to extract JSON — handle cases where Claude adds extra text
+    let result = {};
+    try {
+      // First try: direct parse (cleanest case)
+      result = JSON.parse(text);
+    } catch {
+      // Second try: extract JSON block from text
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          result = JSON.parse(jsonMatch[0]);
+        } catch (parseErr) {
+          console.error('JSON parse failed:', parseErr.message);
+          console.error('Raw text was:', text);
+        }
+      }
+    }
+
+    // ── Validate required fields ──
+    if (!result.companyName || !result.description) {
+      console.warn('Missing fields in result:', result);
+      // Fallback: extract domain as company name
+      const domain = url.replace(/https?:\/\//, '').replace(/www\./, '').split('/')[0];
+      result.companyName = result.companyName || domain;
+      result.description = result.description || '';
+    }
+
+    console.log('Final result being sent:', result);
     return res.status(200).json(result);
+
   } catch (err) {
+    console.error('analyze handler error:', err);
     return res.status(500).json({ error: 'Analysis failed', details: err.message });
   }
 }
