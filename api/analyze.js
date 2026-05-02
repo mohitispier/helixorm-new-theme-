@@ -11,9 +11,32 @@ export default async function handler(req, res) {
 
   const domain = url.replace(/https?:\/\//, '').replace(/www\./, '').split('/')[0];
 
+  // ── STEP 1: Actual website ka content fetch karo ──
+  let websiteContent = '';
   try {
-    // ── STEP 1: Get companyName + competitors ──
-    const infoRes = await fetch('https://api.anthropic.com/v1/messages', {
+    const siteRes = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Helix/1.0)' },
+      signal: AbortSignal.timeout(8000)
+    });
+    const html = await siteRes.text();
+    // HTML se sirf text extract karo (tags hata do)
+    const text = html
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 3000); // First 3000 chars kaafi hain
+    websiteContent = text;
+    console.log('Website fetched, content length:', websiteContent.length);
+  } catch (err) {
+    console.warn('Website fetch failed:', err.message);
+    websiteContent = `Domain: ${domain}`;
+  }
+
+  try {
+    // ── STEP 2: Claude ko real content do ──
+    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,59 +45,57 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
+        max_tokens: 1000,
         messages: [{
           role: 'user',
-          content: `Given the website domain "${domain}", respond with ONLY this JSON (no markdown, no backticks, just raw JSON):
-{"companyName":"Proper company name","competitors":["https://competitor1.com","https://competitor2.com","https://competitor3.com"]}`
+          content: `Based on this website content from "${url}", extract company information.
+
+WEBSITE CONTENT:
+${websiteContent}
+
+Return ONLY this raw JSON (no markdown, no backticks, start with { end with }):
+{
+  "companyName": "Proper company name (NOT the domain, extract from content)",
+  "description": "Write 3 full sentences about what this company does, who they serve, and their key value. Minimum 200 characters.",
+  "competitors": ["https://competitor1.com", "https://competitor2.com", "https://competitor3.com"]
+}
+
+Rules:
+- companyName: Extract the real brand name from content, not the domain URL
+- description: Must be 3 sentences, minimum 200 characters, based on actual content
+- competitors: 3 real competitor URLs in same industry`
         }]
       })
     });
 
-    const infoData = await infoRes.json();
-    const infoText = infoData.content?.[0]?.text?.trim() || '{}';
-    let info = {};
+    const claudeData = await claudeRes.json();
+    console.log('Claude status:', claudeData.type, '| stop_reason:', claudeData.stop_reason);
+
+    const text = claudeData.content?.[0]?.text?.trim() || '';
+    console.log('Claude raw text:', text.slice(0, 300));
+
+    let result = {};
     try {
-      info = JSON.parse(infoText);
+      result = JSON.parse(text);
     } catch {
-      const m = infoText.match(/\{[\s\S]*\}/);
-      if (m) { try { info = JSON.parse(m[0]); } catch {} }
+      const m = text.match(/\{[\s\S]*\}/);
+      if (m) {
+        try { result = JSON.parse(m[0]); } catch (e) {
+          console.error('JSON parse failed:', e.message);
+        }
+      }
     }
 
-    // ── STEP 2: Get description in a SEPARATE call ──
-    const descRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        messages: [{
-          role: 'user',
-          content: `Write a professional company description for "${info.companyName || domain}" (website: ${url}).
-
-Write exactly 3 sentences covering: what they do, who they serve, and their key value. Be specific and professional. Return ONLY the plain description text — no JSON, no bullet points, no labels, nothing else.`
-        }]
-      })
-    });
-
-    const descData = await descRes.json();
-    const description = descData.content?.[0]?.text?.trim() || '';
-
-    const result = {
-      companyName: info.companyName || domain,
-      description: description,
-      competitors: info.competitors || []
-    };
+    // Fallbacks
+    result.companyName = result.companyName || domain;
+    result.description = result.description || '';
+    result.competitors = result.competitors || [];
 
     console.log('Final result:', JSON.stringify(result));
     return res.status(200).json(result);
 
   } catch (err) {
-    console.error('analyze error:', err.message);
+    console.error('Claude API error:', err.message);
     return res.status(500).json({ error: 'Analysis failed', details: err.message });
   }
 }
