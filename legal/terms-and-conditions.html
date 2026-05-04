@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms and Conditions | Helix ORM</title>
+  <meta name="description" content="Read the Terms and Conditions for using Helix ORM services, including policies on payments, service usage, and liability.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* --- Core Styles from Helix Theme --- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #8ab44a;
+      --hero: #1a0f2e;
+      --bg: #f9f8fb;
+      --fg: #1c1228;
+      --muted: #6b6478;
+      --border: #e2dcea;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    .text-center { text-align: center; }
+    .section-padding { padding: 80px 0; }
+    
+    /* Navbar */
+    nav { background: var(--hero); padding: 0 2rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
+    .logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; padding: 8px 16px; font-size: 0.875rem; font-weight: 500; }
+    
+    /* Mobile Toggle */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .menu-toggle span { width: 25px; height: 3px; background: white; border-radius: 2px; }
+
+    /* Hero Section */
+    .hero { background: var(--hero); color: white; padding: 100px 0; text-align: center; }
+    .hero h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 20px; }
+    .hero p { max-width: 800px; margin: 0 auto; opacity: 0.8; font-size: 1.1rem; }
+
+    /* Terms Content Layout */
+    .terms-card { background: white; border-radius: 30px; border: 1px solid var(--border); padding: 60px; margin-top: -60px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); margin-bottom: 60px; }
+    .terms-section { margin-bottom: 50px; }
+    .terms-section h2 { color: var(--hero); margin-bottom: 25px; font-size: 1.8rem; display: flex; align-items: center; gap: 15px; }
+    .terms-section h2 span { color: var(--primary); font-weight: 800; opacity: 0.3; }
+    .terms-section p { color: var(--muted); margin-bottom: 20px; }
+    
+    .feature-list { list-style: none; margin-top: 15px; }
+    .feature-list li { margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; color: var(--fg); font-size: 0.95rem; }
+    .feature-list li::before { content: "→"; color: var(--primary); font-weight: bold; }
+
+    .dark-feature { background: var(--hero); color: white; border-radius: 30px; padding: 50px; margin: 40px 0; border-left: 6px solid var(--primary); }
+    
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .info-box { background: var(--bg); padding: 30px; border-radius: 20px; border: 1px solid var(--border); }
+
+    /* Footer */
+    footer { background: var(--hero); color: white; padding: 80px 0 30px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 40px; margin-bottom: 50px; }
+    .btn { background: var(--primary); color: white; padding: 12px 30px; border-radius: 999px; text-decoration: none; font-weight: 600; display: inline-block; transition: 0.3s; }
+
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 72px; left: 0; width: 100%; background: #1a0f2e; padding: 20px 0; text-align: center; }
+      .nav-links.active { display: flex; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .terms-card { padding: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">H</div>
+      <span class="logo-text">Helix ORM</span>
+    </a>
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="nav-links" id="mobileMenu">
+      <a href="/">Home</a>
+      <a href="/services">Services</a>
+      <a href="/features">Features</a>
+      <a href="/pricing">Pricing</a>
+       <a href="/team">Team</a>
+      <a href="/#contact">Contact</a>
+      <a href="/#contact" class="btn" style="margin-left:15px">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span style="color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">Agreement of Service</span>
+    <h1>Terms & Conditions</h1>
+    <p>Please read these terms carefully before accessing or using any service operated by Helix ORM.</p>
+  </div>
+</header>
+
+<div class="container">
+  <main class="terms-card">
+    <!-- Introduction -->
+    <section class="terms-section">
+      <p>Welcome to Helix ORM. Accessing or using any service operated by Helix ORM (“Company,” “we,” “our,” or “us”) constitutes acceptance of these Terms and Conditions of Service (“Terms”).</p>
+      <div class="dark-feature">
+        <h3 style="color: var(--primary); margin-bottom: 10px;">Service Overview</h3>
+        <p style="opacity: 0.9; margin-bottom: 0;">We provide online reputation management (ORM), AI visibility detection, brand monitoring, and digital improvement strategies through ethical and data-driven methods.</p>
+      </div>
+    </section>
+
+    <!-- Section 2 & 3 -->
+    <div class="grid-2">
+      <section class="terms-section info-box">
+        <h2><span>01</span> Usage Requirements</h2>
+        <ul class="feature-list">
+          <li>You must be 18 years or older.</li>
+          <li>All submitted info must be true.</li>
+          <li>No illegal or fraudulent use.</li>
+          <li>No interference with our systems.</li>
+        </ul>
+      </section>
+
+      <section class="terms-section info-box">
+        <h2><span>02</span> Scope of Services</h2>
+        <ul class="feature-list">
+          <li>AI Search Visibility Tracking.</li>
+          <li>Brand Mention Strategies.</li>
+          <li>Analytics & Citation Mapping.</li>
+          <li>Reputation Risk Monitoring.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Section 4: Limitations -->
+    <section class="terms-section" style="margin-top: 40px;">
+      <h2><span>03</span> Limitations of Service</h2>
+      <p>While we work to improve your brand, Helix ORM does not control third-party platforms (Google, AI Models, Forums). Therefore:</p>
+      <div class="grid-2">
+        <div style="border-bottom: 1px solid var(--border); padding: 15px 0;">
+          <strong style="color: var(--hero);">No Content Removal Guarantee:</strong> We cannot force third-party sites to delete content.
+        </div>
+        <div style="border-bottom: 1px solid var(--border); padding: 15px 0;">
+          <strong style="color: var(--hero);">No Fixed Rankings:</strong> We cannot guarantee specific positions in AI or Search systems.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6 & 7: Payment & Refunds -->
+    <section class="terms-section">
+      <h2><span>04</span> Payment & Refunds</h2>
+      <div class="grid-2">
+        <div>
+          <h4 style="margin-bottom:10px">Billing Policy</h4>
+          <p style="font-size: 0.9rem;">Services are subscription-based or milestone-based. Billing is done in advance. Failure to pay on time may result in service suspension.</p>
+        </div>
+        <div>
+          <h4 style="margin-bottom:10px">Refund Policy</h4>
+          <p style="font-size: 0.9rem;">Payments for completed work are non-refundable. Subscription cancellations apply to the next billing cycle.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: IP -->
+    <section class="terms-section dark-feature" style="background: var(--bg); color: var(--fg); border: 1px solid var(--border);">
+      <h2 style="margin-bottom: 15px;">Intellectual Property</h2>
+      <p style="color: var(--muted);">All reporting tools, dashboards, and materials created by Helix ORM remain our intellectual property. Clients are granted rights to use the data and reports provided for their specific business needs.</p>
+    </section>
+
+    <!-- Contact Footer in Card -->
+    <section class="text-center" style="margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border);">
+      <h3 style="margin-bottom: 15px;">Have Questions?</h3>
+      <p style="color: var(--muted);">If you have any questions regarding these terms, contact us.</p>
+      <p style="font-weight: 700; margin-top: 10px; color: var(--hero);">Email: info@helixorm.com</p>
+    </section>
+  </main>
+</div>
+
+<style>
+  /* --- Exact Footer Styles from citation-intelligence (1).html --- */
+  footer {
+    background: var(--hero);
+    color: white;
+    padding: 80px 0 30px;
+    margin-top: 60px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 40px;
+    margin-bottom: 50px;
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: white;
+  }
+  .footer-logo .logo-icon {
+    width: 35px;
+    height: 35px;
+    background: var(--primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+  .footer-about {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .footer-heading {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: white;
+  }
+  .footer-links {
+    list-style: none;
+  }
+  .footer-links li {
+    margin-bottom: 12px;
+  }
+  .footer-links a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s;
+  }
+  .footer-links a:hover {
+    color: var(--primary);
+    padding-left: 5px;
+  }
+  .footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+  .footer-bottom {
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-copy {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+  }
+  .footer-legal a {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    text-decoration: none;
+    margin-left: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { justify-content: center; text-align: center; }
+  }
+</style>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand Identity -->
+      <div>
+        <a href="index.html" class="footer-logo">
+          <div class="logo-icon">H</div>
+          <span style="font-weight:700; font-size: 1.2rem;">Helix ORM</span>
+        </a>
+        <p class="footer-about">
+          Leading reputation management company assisting small, mid-sized, and large businesses with professional online monitoring and strategic ORM solutions.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="footer-heading">Company</h4>
+        <ul class="footer-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/pricing">Pricing Plans</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <h4 class="footer-heading">Our Expertise</h4>
+        <ul class="footer-links">
+          <li><a href="services.html">Reputation Audit</a></li>
+          <li><a href="services.html">Negative Removal</a></li>
+          <li><a href="services.html">AI Search Visibility</a></li>
+          <li><a href="services.html">Crisis Management</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h4 class="footer-heading">Get In Touch</h4>
+        <p class="footer-about" style="margin-bottom: 20px;">
+          Need a custom plan? Our support team is here to assist you in choosing the best fit
+        </p>
+        <div class="footer-contact-item">
+          <span>📧</span> info@helixorm.com
+        </div>
+        <a href="contact.html" class="btn" style="padding: 10px 20px; font-size: 0.85rem; margin-top: 10px;">Contact Us</a>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Helix ORM. All rights reserved</p>
+      <div class="footer-legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+  }
+</script>
+</body>
+</html>
