@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helix ORM - Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      background: #f9fafb;
+      color: #111827;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── LAYOUT ─── */
+    .app { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: 224px;
+      flex-shrink: 0;
+      background: #fff;
+      border-right: 1px solid #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .sidebar-company {
+      padding: 16px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .company-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 8px;
+      margin: -8px;
+      border-radius: 10px;
+      transition: background .15s;
+    }
+    .company-row:hover { background: #f9fafb; }
+    .company-avatar {
+      width: 32px; height: 32px;
+      background: #e5e7eb;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #4b5563; text-transform: uppercase;
+    }
+    .company-name { font-size: 12px; font-weight: 600; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .company-plan { font-size: 10px; color: #f97316; font-weight: 500; }
+    .chevron { width: 12px; height: 12px; color: #9ca3af; margin-left: auto; }
+
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 12px 0; }
+    .nav-section-label {
+      padding: 0 16px;
+      font-size: 10px; font-weight: 600; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: .05em;
+      margin-bottom: 8px;
+    }
+    .nav-items { padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }
+
+    .nav-btn {
+      width: 100%;
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      color: #4b5563;
+      transition: all .15s;
+      text-align: left;
+    }
+    .nav-btn:hover { background: #f9fafb; color: #111827; }
+    .nav-btn.active { background: #fff7ed; color: #ea580c; font-weight: 600; }
+    .nav-btn .icon { width: 16px; height: 16px; flex-shrink: 0; }
+    .nav-btn.active .icon { color: #f97316; }
+    .nav-btn:not(.active) .icon { color: #9ca3af; }
+    .badge {
+      font-size: 9px; background: #fff7ed; color: #f97316;
+      padding: 2px 6px; border-radius: 4px; font-weight: 600; margin-left: auto;
+    }
+
+    .sidebar-bottom {
+      border-top: 1px solid #f3f4f6;
+      padding: 12px 8px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .bottom-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px;
+      border-radius: 10px; border: none;
+      background: transparent; cursor: pointer;
+      font-size: 12px; color: #6b7280;
+      transition: all .15s; text-align: left; width: 100%;
+    }
+    .bottom-btn:hover { background: #f9fafb; color: #1f2937; }
+    .bottom-btn .icon { width: 16px; height: 16px; color: #9ca3af; }
+
+    .user-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; margin-top: 4px;
+    }
+    .user-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #f97316;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 10px; font-weight: 700; flex-shrink: 0;
+    }
+    .user-name { font-size: 12px; font-weight: 600; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-email { font-size: 10px; color: #9ca3af; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .logout-btn { background: none; border: none; cursor: pointer; color: #d1d5db; margin-left: auto; }
+    .logout-btn:hover { color: #6b7280; }
+
+    /* ─── MAIN ─── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #f3f4f6;
+      padding: 12px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 8px; }
+    .topbar-icon {
+      width: 20px; height: 20px;
+      background: #fff7ed; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #f97316;
+    }
+    .topbar-title { font-size: 14px; font-weight: 600; color: #111827; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .btn-outline {
+      font-size: 12px; color: #6b7280;
+      border: 1px solid #e5e7eb;
+      padding: 6px 12px; border-radius: 8px;
+      background: #fff; cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: background .15s;
+    }
+    .btn-outline:hover { background: #f9fafb; }
+    .btn-credits {
+      display: flex; align-items: center; gap: 6px;
+      background: #f97316; color: #fff;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 12px; border-radius: 8px;
+      border: none; cursor: pointer; transition: background .15s;
+    }
+    .btn-credits:hover { background: #ea580c; }
+
+    /* ─── CONTENT ─── */
+    .content { flex: 1; overflow-y: auto; padding: 24px; }
+
+    /* ─── SANDBOX VIEW ─── */
+    .sandbox { display: flex; gap: 24px; height: 100%; }
+    .sandbox-main { flex: 1; }
+    .sandbox-tips { width: 288px; flex-shrink: 0; }
+
+    .card {
+      background: #fff;
+      border: 1px solid #f3f4f6;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .card-header {
+      border-bottom: 1px solid #f3f4f6;
+      padding: 16px 24px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-header-icon {
+      width: 20px; height: 20px;
+      background: #fff7ed; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-header-title { font-size: 14px; font-weight: 600; color: #111827; }
+    .card-header-sub { font-size: 12px; color: #9ca3af; }
+
+    .tabs { display: flex; border-bottom: 1px solid #f3f4f6; }
+    .tab {
+      flex: 1; padding: 12px 0;
+      font-size: 12px; font-weight: 500;
+      border: none; background: transparent; cursor: pointer;
+      border-bottom: 2px solid transparent;
+      color: #6b7280; transition: all .15s;
+    }
+    .tab:hover { color: #374151; }
+    .tab.active { border-bottom-color: #f97316; color: #ea580c; background: rgba(249,115,22,0.03); }
+
+    .card-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+    label.field-label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    .required { color: #f87171; }
+    input[type="url"], input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 14px;
+      background: #f9fafb;
+      color: #1f2937;
+      outline: none;
+      font-family: inherit;
+      transition: border-color .15s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #fb923c; }
+
+    .editor-wrap {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .editor-toolbar {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 12px;
+      border-bottom: 1px solid #f3f4f6;
+      background: #f9fafb;
+    }
+    .toolbar-btn {
+      width: 24px; height: 24px;
+      font-size: 12px; font-weight: 500; color: #4b5563;
+      background: transparent; border: none; cursor: pointer;
+      border-radius: 4px; transition: background .15s;
+    }
+    .toolbar-btn:hover { background: #e5e7eb; }
+    .toolbar-divider { width: 1px; height: 16px; background: #e5e7eb; margin: 0 4px; }
+    textarea.reply-area {
+      border: none; border-radius: 0;
+      padding: 16px;
+      resize: none;
+      background: #fff;
+      min-height: 120px;
+    }
+    textarea.reply-area:focus { border-color: transparent; }
+    .editor-footer {
+      padding: 10px 16px;
+      border-top: 1px solid #f3f4f6;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .btn-generate {
+      display: flex; align-items: center; gap: 8px;
+      background: #f97316; color: #fff;
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 12px; font-weight: 600;
+      border: none; cursor: pointer; transition: background .15s;
+    }
+    .btn-generate:hover { background: #ea580c; }
+    .btn-refine {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: #6b7280;
+      transition: color .15s;
+    }
+    .btn-refine:hover { color: #374151; }
+
+    .publish-box {
+      border: 1px solid #f3f4f6;
+      border-radius: 12px; padding: 16px;
+    }
+    .publish-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #f97316; }
+    .publish-title { font-size: 14px; font-weight: 500; color: #1f2937; }
+    .publish-sub { font-size: 12px; color: #9ca3af; }
+
+    .bottom-bar { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; }
+    .warning-pill {
+      font-size: 12px; color: #92400e;
+      background: #fffbeb; padding: 8px 12px; border-radius: 8px;
+    }
+    .task-right { text-align: right; }
+    .task-count { font-size: 12px; color: #6b7280; }
+    .btn-create-task {
+      display: flex; align-items: center; gap: 8px;
+      background: #f3f4f6; color: #4b5563;
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 12px; font-weight: 600;
+      border: none; cursor: pointer; margin-top: 8px;
+      transition: background .15s;
+    }
+    .btn-create-task:hover { background: #e5e7eb; }
+    .credits-badge {
+      background: #f97316; color: #fff;
+      font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600;
+    }
+
+    /* Tips */
+    .tips-card {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 16px; padding: 20px;
+    }
+    .tips-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .tips-icon {
+      width: 20px; height: 20px;
+      background: #f97316; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+    .tips-title { font-size: 14px; font-weight: 600; color: #111827; }
+    .tips-sub { font-size: 12px; color: #6b7280; margin-bottom: 16px; }
+    .tip-item { display: flex; gap: 10px; margin-bottom: 16px; }
+    .tip-num {
+      width: 20px; height: 20px;
+      border-radius: 50%; background: #fed7aa;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #c2410c;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .tip-title { font-size: 12px; font-weight: 600; color: #1f2937; }
+    .tip-desc { font-size: 11px; color: #6b7280; margin-top: 2px; }
+    .tip-link { font-size: 11px; color: #f97316; text-decoration: none; display: block; margin-top: 4px; cursor: pointer; }
+    .tip-link:hover { text-decoration: underline; }
+
+    /* ─── TASKS VIEW ─── */
+    .tasks-view { max-width: 720px; }
+    .filter-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .filter-btn {
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 500;
+      border: 1px solid #e5e7eb; background: #fff; color: #4b5563;
+      cursor: pointer; transition: all .15s; text-transform: capitalize;
+    }
+    .filter-btn.active { background: #f97316; color: #fff; border-color: #f97316; }
+    .filter-btn:hover:not(.active) { background: #f9fafb; }
+
+    .task-card {
+      background: #fff; border: 1px solid #f3f4f6;
+      border-radius: 16px; padding: 16px;
+      display: flex; align-items: flex-start; gap: 16px;
+      margin-bottom: 12px;
+      transition: box-shadow .15s;
+    }
+    .task-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .task-status-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+    .status-published { color: #22c55e; }
+    .status-pending { color: #fb923c; }
+    .status-failed { color: #f87171; }
+    .task-body { flex: 1; min-width: 0; }
+    .task-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .task-sub { font-size: 12px; color: #f97316; font-weight: 500; }
+    .task-sep { color: #d1d5db; font-size: 12px; }
+    .task-time { font-size: 12px; color: #9ca3af; }
+    .task-title { font-size: 14px; font-weight: 500; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .task-footer { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+    .task-status-label { font-size: 11px; font-weight: 500; }
+    .task-votes { font-size: 11px; color: #9ca3af; }
+    .task-ext-btn { background: none; border: none; cursor: pointer; color: #d1d5db; flex-shrink: 0; }
+    .task-ext-btn:hover { color: #6b7280; }
+
+    /* ─── UPGRADE / SETTINGS / ARCHIVE VIEWS ─── */
+    .center-view {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 256px; gap: 16px;
+    }
+    .upgrade-icon {
+      width: 56px; height: 56px;
+      background: #fff7ed; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .upgrade-title { font-size: 18px; font-weight: 700; color: #111827; }
+    .upgrade-sub { font-size: 14px; color: #6b7280; margin-top: 4px; }
+    .btn-upgrade {
+      background: #f97316; color: #fff;
+      padding: 10px 24px; border-radius: 12px;
+      font-size: 14px; font-weight: 600;
+      border: none; cursor: pointer; margin-top: 4px;
+      transition: background .15s;
+    }
+    .btn-upgrade:hover { background: #ea580c; }
+
+    .settings-view { max-width: 480px; }
+    .settings-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 16px; }
+    .settings-card {
+      background: #fff; border: 1px solid #f3f4f6;
+      border-radius: 16px; padding: 20px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .settings-field-label { font-size: 12px; font-weight: 500; color: #6b7280; margin-bottom: 4px; }
+    .settings-field-value { font-size: 14px; font-weight: 500; color: #1f2937; }
+
+    /* ─── CREDITS MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+    .modal {
+      background: #fff; border-radius: 20px;
+      padding: 28px; width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    }
+    .modal-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 4px; }
+    .modal-sub { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+    .credit-pack {
+      border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px;
+      margin-bottom: 12px; cursor: pointer; transition: all .15s;
+    }
+    .credit-pack:hover { border-color: #fb923c; background: #fff7ed; }
+    .credit-pack.selected { border-color: #f97316; background: #fff7ed; }
+    .pack-top { display: flex; justify-content: space-between; align-items: center; }
+    .pack-name { font-size: 14px; font-weight: 600; color: #1f2937; }
+    .pack-price { font-size: 14px; font-weight: 700; color: #f97316; }
+    .pack-desc { font-size: 12px; color: #6b7280; margin-top: 4px; }
+    .modal-footer { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-cancel {
+      flex: 1; padding: 10px; border-radius: 10px;
+      border: 1px solid #e5e7eb; background: #fff;
+      font-size: 14px; font-weight: 500; color: #6b7280;
+      cursor: pointer; transition: background .15s;
+    }
+    .btn-cancel:hover { background: #f9fafb; }
+    .btn-buy {
+      flex: 1; padding: 10px; border-radius: 10px;
+      background: #f97316; color: #fff;
+      font-size: 14px; font-weight: 600;
+      border: none; cursor: pointer; transition: background .15s;
+    }
+    .btn-buy:hover { background: #ea580c; }
+
+    /* ─── ONBOARDING ─── */
+    .onboarding-wrap {
+      display: none;
+      min-height: 100vh; background: #f9fafb;
+    }
+    .onboarding-wrap.show { display: flex; }
+    .onboarding-left {
+      width: 100%; max-width: 480px;
+      padding: 40px;
+      display: flex; flex-direction: column;
+    }
+    .onboarding-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+    .logo-icon {
+      width: 32px; height: 32px; background: #f97316;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 14px;
+    }
+    .logo-name { font-size: 18px; font-weight: 700; color: #111827; }
+    .steps-row { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+    .step-circle {
+      width: 24px; height: 24px; border-radius: 50%;
+      border: 2px solid; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; transition: all .3s;
+    }
+    .step-circle.done { background: #f97316; border-color: #f97316; color: #fff; }
+    .step-circle.active { border-color: #f97316; color: #f97316; background: #fff; }
+    .step-circle.inactive { border-color: #d1d5db; color: #d1d5db; background: #fff; }
+    .step-line { height: 2px; width: 32px; transition: background .3s; }
+    .step-line.done { background: #f97316; }
+    .step-line.inactive { background: #e5e7eb; }
+
+    .onboarding-title { font-size: 28px; font-weight: 700; color: #111827; margin-bottom: 8px; }
+    .onboarding-title span { color: #f97316; }
+    .onboarding-sub { font-size: 14px; color: #6b7280; margin-bottom: 28px; }
+    .input-icon-wrap { position: relative; }
+    .input-icon-wrap input { padding-left: 40px; }
+    .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af; }
+    .onboarding-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 32px; }
+    .btn-skip { font-size: 14px; color: #9ca3af; background: none; border: none; cursor: pointer; }
+    .btn-skip:hover { color: #6b7280; }
+    .btn-back {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: #f97316; font-weight: 500;
+      background: none; border: none; cursor: pointer;
+    }
+    .btn-continue {
+      display: flex; align-items: center; gap: 8px;
+      background: #f97316; color: #fff;
+      padding: 10px 24px; border-radius: 12px;
+      font-size: 14px; font-weight: 600;
+      border: none; cursor: pointer; transition: background .15s;
+    }
+    .btn-continue:hover { background: #ea580c; }
+    .btn-continue:disabled { opacity: .4; cursor: default; }
+    .onboarding-right {
+      flex: 1; display: none;
+      background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+      align-items: center; justify-content: center;
+      padding: 48px; position: relative; overflow: hidden;
+    }
+    @media (min-width: 1024px) { .onboarding-right { display: flex; } }
+    .right-content { width: 100%; max-width: 400px; }
+    .right-title { color: #fff; font-size: 28px; font-weight: 700; margin-bottom: 24px; }
+    .right-sub { color: rgba(255,255,255,.8); font-size: 14px; margin-bottom: 24px; }
+    .reddit-card {
+      background: rgba(255,255,255,.15); border-radius: 16px;
+      padding: 16px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .reddit-row {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,.1); border-radius: 12px; padding: 12px;
+    }
+    .reddit-r {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(251,146,60,.3);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 12px;
+    }
+    .reddit-label { color: #fff; font-size: 14px; }
+    .check-list { display: flex; flex-direction: column; gap: 20px; }
+    .check-item { display: flex; align-items: flex-start; gap: 16px; }
+    .check-circle {
+      width: 24px; height: 24px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.6);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .check-circle.done { background: #fff; border-color: #fff; }
+    .check-item-title { font-weight: 700; color: #fff; font-size: 14px; }
+    .check-item-sub { color: rgba(255,255,255,.7); font-size: 12px; margin-top: 4px; }
+    .competitor-preview {
+      background: #fff; border-radius: 16px; padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.1);
+    }
+    .comp-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .comp-user { display: flex; align-items: center; gap: 8px; }
+    .comp-avatar { width: 32px; height: 32px; border-radius: 50%; background: #e5e7eb; }
+    .comp-name { font-size: 12px; font-weight: 600; color: #1f2937; }
+    .comp-action { color: #f97316; font-weight: 400; }
+    .comp-brand { font-size: 12px; font-weight: 700; color: #f97316; }
+    .comp-quote { font-size: 14px; color: #374151; margin-bottom: 8px; }
+    .comp-meta { font-size: 12px; color: #9ca3af; }
+
+    /* ─── ANALYZING LOADER ─── */
+    .analyzing-wrap { display: none; min-height: 100vh; background: #f9fafb; }
+    .analyzing-wrap.show { display: flex; }
+
+    /* SVG Icons */
+    svg { display: inline-block; vertical-align: middle; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: #1f2937; color: #fff;
+      padding: 12px 20px; border-radius: 10px;
+      font-size: 14px; z-index: 200;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+      animation: fadeIn .2s ease;
+      display: none;
+    }
+    .toast.show { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ─── SECTION VISIBILITY ─── */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     ONBOARDING — shown first
+════════════════════════════════════════════ -->
+<div class="onboarding-wrap show" id="onboardingWrap">
+
+  <!-- Analyzing Loader (hidden by default) -->
+  <div class="analyzing-wrap" id="analyzingLoader" style="position:fixed;inset:0;z-index:50;">
+    <div class="onboarding-left" style="align-items:center;justify-content:center;">
+      <div class="onboarding-logo" style="align-self:flex-start;">
+        <div class="logo-icon">H</div>
+        <span class="logo-name">Helix ORM</span>
+      </div>
+      <div class="steps-row" style="align-self:flex-start;">
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle inactive">2</div>
+        <div class="step-line inactive"></div>
+        <div class="step-circle inactive">3</div>
+      </div>
+      <div style="text-align:center;width:100%;max-width:360px;">
+        <div style="width:64px;height:64px;border-radius:16px;background:#fff7ed;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+          <svg class="spin" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+            <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+          </svg>
+        </div>
+        <h2 style="font-size:24px;font-weight:700;color:#111827;margin-bottom:8px;">Analyzing your website</h2>
+        <p style="font-size:14px;color:#6b7280;" id="analyzingUrl">yourwebsite.com</p>
+        <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;" id="checklistItems">
+          <div class="checklist-row" id="cl0" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:#f3f4f6;border:1px solid transparent;opacity:.5;transition:all .4s;">
+            <div class="cl-circle" style="width:20px;height:20px;border-radius:50%;border:2px solid #d1d5db;flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:500;color:#1f2937;">Analyzing your website</span>
+          </div>
+          <div class="checklist-row" id="cl1" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:#f3f4f6;border:1px solid transparent;opacity:.5;transition:all .4s;">
+            <div class="cl-circle" style="width:20px;height:20px;border-radius:50%;border:2px solid #d1d5db;flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:500;color:#1f2937;">Discovering high intent Keywords</span>
+          </div>
+          <div class="checklist-row" id="cl2" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:#f3f4f6;border:1px solid transparent;opacity:.5;transition:all .4s;">
+            <div class="cl-circle" style="width:20px;height:20px;border-radius:50%;border:2px solid #d1d5db;flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:500;color:#1f2937;">Generating Company description</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="onboarding-right" style="display:flex;">
+      <div class="right-content">
+        <h2 class="right-title">Analyzing your brand</h2>
+        <div class="check-list" id="rightChecklist">
+          <div class="check-item" id="rcl0">
+            <div class="check-circle" id="rcc0"><span></span></div>
+            <div><div class="check-item-title">Analyzing your website</div><div class="check-item-sub">Scanning your site to understand products, services, and core messaging.</div></div>
+          </div>
+          <div class="check-item" id="rcl1">
+            <div class="check-circle" id="rcc1"><span></span></div>
+            <div><div class="check-item-title">Discovering high intent Keywords</div><div class="check-item-sub">Finding the topics and phrases your audience actively searches for.</div></div>
+          </div>
+          <div class="check-item" id="rcl2">
+            <div class="check-circle" id="rcc2"><span></span></div>
+            <div><div class="check-item-title">Generating Company description</div><div class="check-item-sub">Creating a clear, AI-powered summary of your business for engagement.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step Content -->
+  <div class="onboarding-left" id="onboardingLeft">
+    <div class="onboarding-logo">
+      <div class="logo-icon">H</div>
+      <span class="logo-name">Helix ORM</span>
+    </div>
+
+    <div class="steps-row" id="stepsRow">
+      <div class="step-circle active" id="sc0">1</div>
+      <div class="step-line inactive" id="sl01"></div>
+      <div class="step-circle inactive" id="sc1">2</div>
+      <div class="step-line inactive" id="sl12"></div>
+      <div class="step-circle inactive" id="sc2">3</div>
+    </div>
+
+    <!-- Step 0 -->
+    <div id="step0" class="flex-1" style="display:flex;flex-direction:column;flex:1;">
+      <h1 class="onboarding-title">Tell us about <span>your company</span></h1>
+      <p class="onboarding-sub">We'll use it to learn about your product and suggest you the most relevant Reddit posts to target.</p>
+      <label class="field-label">Your Website</label>
+      <div class="input-icon-wrap">
+        <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <input type="url" id="websiteInput" placeholder="https://yourcompany.com" style="border:2px solid #fed7aa;" />
+      </div>
+      <div class="onboarding-footer" style="flex:1;align-items:flex-end;">
+        <button class="btn-skip" onclick="goStep(1); document.getElementById('btn1').disabled = false;">I don't have a website</button>
+        <button class="btn-continue" id="btn0" onclick="handleWebsiteContinue()" disabled>
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div id="step1" style="display:none;flex:1;flex-direction:column;">
+      <h1 class="onboarding-title">Tell us about <span>your company</span></h1>
+      <p class="onboarding-sub">We'll use it to learn about your product and suggest you the most relevant Reddit posts to target.</p>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <label class="field-label">Company Name</label>
+          <input type="text" id="companyNameInput" placeholder="Acme Corp" />
+        </div>
+        <div>
+          <label class="field-label">Target Location</label>
+          <select id="locationSelect" style="border:2px solid #fed7aa;background:#fff;">
+            <option>United States — English</option>
+            <option>India — English</option>
+            <option>United Kingdom — English</option>
+            <option>Canada — English</option>
+            <option>Australia — English</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Company Description</label>
+          <textarea id="descriptionInput" rows="6" placeholder="Describe your company..." style="background:#f9fafb;resize:none;"></textarea>
+          <p style="font-size:12px;color:#9ca3af;margin-top:4px;" id="descCount">0/1600 characters</p>
+        </div>
+      </div>
+      <div class="onboarding-footer" style="margin-top:24px;">
+        <button class="btn-back" onclick="goStep(0)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Go Back
+        </button>
+        <button class="btn-continue" id="btn1" onclick="goStep(2)" disabled>
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="step2" style="display:none;flex:1;flex-direction:column;">
+      <h1 class="onboarding-title">And now, who are your <span>competitors?</span></h1>
+      <p class="onboarding-sub">We'll use it to help you sneak into their high traffic ranking posts and monitor their mentions.</p>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <label class="field-label">Competitor One</label>
+          <div class="input-icon-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <input type="url" id="comp0" placeholder="https://competitor.com" />
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Competitor Two</label>
+          <div class="input-icon-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <input type="url" id="comp1" placeholder="https://competitor.com" />
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Competitor Three</label>
+          <div class="input-icon-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <input type="url" id="comp2" placeholder="https://competitor.com" />
+          </div>
+        </div>
+        <p style="font-size:12px;color:#9ca3af;display:flex;align-items:center;gap:6px;">
+          <span style="width:16px;height:16px;border-radius:50%;border:1px solid #d1d5db;display:inline-flex;align-items:center;justify-content:center;font-size:10px;">i</span>
+          If they don't look right, you can modify or delete them before continuing.
+        </p>
+      </div>
+      <div class="onboarding-footer" style="margin-top:32px;">
+        <button class="btn-back" onclick="goStep(1)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Go Back
+        </button>
+        <button class="btn-continue" onclick="completeOnboarding()">
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="onboarding-right" id="onboardingRight">
+    <div class="right-content" id="rightContent">
+      <!-- dynamically filled -->
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     DASHBOARD — hidden until onboarding completes
+════════════════════════════════════════════ -->
+<div id="dashboardWrap" style="display:none;">
+<!-- ════ SIDEBAR ════ -->
+<div class="sidebar">
+  <div class="sb-top">
+    <div class="co-row">
+      <div class="co-av">R</div>
+      <div>
+        <div class="co-name">restrosaathi.in</div>
+        <div class="co-plan">Starter Plan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-lbl">Main Menu</div>
+  <button class="nav-btn active" onclick="nav('overview',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Overview
+  </button>
+  <button class="nav-btn" onclick="nav('target',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
+    Target
+  </button>
+  <button class="nav-btn" onclick="nav('pricing',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    Pricing
+  </button>
+  <button class="nav-btn" onclick="nav('social',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    Social Media
+  </button>
+
+  <div class="sb-bottom">
+    <button class="nav-btn" style="margin:0 0 2px;" onclick="openHelp()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="2.5"/></svg>
+      Help Center
+    </button>
+    <button class="nav-btn" style="margin:0 0 6px;" onclick="nav('settings',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </button>
+    <div class="user-row">
+      <div class="user-av">D</div>
+      <div>
+        <div class="user-name">DR Inna</div>
+        <div class="user-email">linadi79@gmail.com</div>
+      </div>
+      <button class="logout" title="Logout" onclick="toast('Logged out!')">⇥</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MAIN ════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-dot"></div>
+      <span class="tb-title" id="topTitle">Overview</span>
+    </div>
+    <div class="tb-right">
+      <div class="badge-plan">Plan: <b>Starter</b></div>
+      <button class="btn-call">📅 Book a Call</button>
+      <button class="btn-credits" onclick="openCredits()">✦ 0 Credits</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="section active" id="sec-overview">
+      <div style="margin-bottom:20px;">
+        <div style="font-size:22px;font-weight:800;color:#111;" id="ov-welcome-name">Welcome back 👋</div>
+        <div style="font-size:13px;color:#888;margin-top:3px;" id="ov-welcome">Here's your brand performance.</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-ic" style="background:#fff8e1;">⭐</div><div><div class="kpi-lbl">Brand Score</div><div class="kpi-val">87/100</div></div></div>
+        <div class="kpi-card"><div class="kpi-ic" style="background:#e8f5e9;">📈</div><div><div class="kpi-lbl">Reach</div><div class="kpi-val">24.5K</div></div></div>
+        <div class="kpi-card"><div class="kpi-ic" style="background:#e3f2fd;">👥</div><div><div class="kpi-lbl">Audience</div><div class="kpi-val">8,320</div></div></div>
+        <div class="kpi-card"><div class="kpi-ic" style="background:#fce4ec;">🔗</div><div><div class="kpi-lbl">Social Posts</div><div class="kpi-val">142</div></div></div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="ch-head"><span class="ch-title">Performance Chart</span><div class="legend"><span><span class="ldot" style="background:#5b9cf6;"></span>lv</span><span><span class="ldot" style="background:#f97316;"></span>TV</span></div></div>
+          <canvas id="chart1" height="130"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="ch-head"><span class="ch-title">Social Media Growth</span><div class="legend"><span><span class="ldot" style="background:#4caf50;"></span>Reach</span><span><span class="ldot" style="background:#fbbf24;"></span>Engage</span></div></div>
+          <canvas id="chart2" height="130"></canvas>
+        </div>
+      </div>
+      <div class="bottom-row">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><span class="ldot" style="background:#4caf50;width:9px;height:9px;display:inline-block;border-radius:50%;margin-right:4px;"></span>Live Targets</div>
+            <span class="bglive">Live</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:12px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#f97316;cursor:pointer;" title="Orange tasks"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#4caf50;cursor:pointer;" title="Green tasks"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#5b9cf6;cursor:pointer;" title="Blue tasks"></div>
+            <span style="font-size:11px;color:#888;border:1px solid #ddd;border-radius:6px;padding:1px 8px;cursor:pointer;">□ Chat</span>
+          </div>
+          <div class="task-item"><div class="tchk done">✓</div><span class="tt done">Reply to r/entrepreneur mention</span><span class="ttime">2m ago</span></div>
+          <div class="task-item"><div class="tchk done">✓</div><span class="tt done">Post brand-story in r/startups</span><span class="ttime">15m ago</span></div>
+          <div class="task-item"><div class="tchk"></div><span class="tt">Comment on r/marketing thread</span><span class="ttime">1h ago</span></div>
+          <div class="task-item"><div class="tchk"></div><span class="tt">Monitor r/smallbusiness for leads</span><span class="ttime">1h ago</span></div>
+          <div class="task-item"><div class="tchk"></div><span class="tt">Draft response to negative review</span><span class="ttime">2h ago</span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Reddit Mentions</div>
+            <span class="bgnew">4 new</span>
+          </div>
+          <div class="mention"><div class="m-meta"><span class="mdot" style="background:#4caf50;"></span><span class="msub">r/entrepreneur</span><span class="muser">u/startup_founder</span><span class="mtime">2h ago ↗</span></div><div class="mtext">Helix ORM completely transformed our brand reputation. <b>Highly recommend!</b></div></div>
+          <div class="mention"><div class="m-meta"><span class="mdot" style="background:#4caf50;"></span><span class="msub">r/marketing</span><span class="muser">u/marketer_pro</span><span class="mtime">3h ago ↗</span></div><div class="mtext">Just started using Helix ORM and the Reddit monitoring is <b>insane</b>. Worth every penny.</div></div>
+          <div class="mention"><div class="m-meta"><span class="mdot" style="background:#bbb;"></span><span class="msub" style="color:#888;">r/smallbusiness</span><span class="muser">u/biz_owner_99</span><span class="mtime">4h ago ↗</span></div><div class="mtext">Looking for alternatives to Helix ORM, has anyone tried others?</div></div>
+          <div class="mention"><div class="m-meta"><span class="mdot" style="background:#4caf50;"></span><span class="msub">r/startups</span><span class="muser">u/founder_jay</span><span class="mtime">1d ago ↗</span></div><div class="mtext">Our Google rating went from 3.2 to 4.7 in 3 months with Helix ORM.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TARGET ══ -->
+    <div class="section" id="sec-target">
+      <div class="page-hd"><div class="page-title">Target Audience</div><div class="page-sub">Your defined target market and customer profile</div></div>
+      <div class="target-grid">
+        <div class="tc"><div class="tc-head"><div class="tc-ic" style="background:#fff3e0;">🏢</div><div class="tc-lbl">Company</div></div><div class="tc-val" id="tg-company">—</div></div>
+        <div class="tc"><div class="tc-head"><div class="tc-ic" style="background:#e8f5e9;">📍</div><div class="tc-lbl">Target Location</div></div><div class="tc-val" id="tg-location">—</div></div>
+        <div class="tc"><div class="tc-head"><div class="tc-ic" style="background:#e3f2fd;">👥</div><div class="tc-lbl">Target Audience</div></div><div class="tc-val">Small businesses, startups, and growing brands looking to manage and improve their online reputation.</div></div>
+        <div class="tc"><div class="tc-head"><div class="tc-ic" style="background:#ede7f6;">⚔️</div><div class="tc-lbl">Competitors</div></div><div class="tc-val" id="tg-competitors"><div style="color:#aaa;">No competitors added.</div></div></div>
+      </div>
+      <div class="tc" style="margin-top:14px;">
+        <div class="tc-head"><div class="tc-ic" style="background:#f5f5f5;">📄</div><div class="tc-lbl">Company Description</div></div>
+        <div class="tc-val" id="tg-desc" style="color:#555;line-height:1.8;">—</div>
+      </div>
+    </div>
+
+    <!-- ══ PRICING ══ -->
+    <div class="section" id="sec-pricing">
+      <div class="page-hd"><div class="page-title">Pricing Plans</div><div class="page-sub">Choose the plan that fits your needs</div></div>
+      <div class="btog-wrap">
+        <button class="btog on" id="btog-m" onclick="setBilling('monthly')">Monthly</button>
+        <button class="btog" id="btog-a" onclick="setBilling('annual')">Annual <span style="color:#4caf50;font-size:10px;font-weight:800;margin-left:4px;">-20%</span></button>
+      </div>
+      <div class="plans-grid">
+        <div class="plan-card">
+          <div class="plan-ic-row"><div class="plan-ic" style="background:#e3f2fd;">⚡</div><div><div class="plan-name">Starter</div><div class="plan-desc">For individuals & small brands</div></div></div>
+          <div class="plan-price">$<span id="pp-s">49</span><small>/mo</small></div>
+          <ul class="plan-feats"><li><span class="fc">✓</span>Overview dashboard</li><li><span class="fc">✓</span>Target audience setup</li><li><span class="fc">✓</span>Social media tracking</li><li><span class="fc">✓</span>50 AI credits/month</li><li><span class="fc">✓</span>Email support</li></ul>
+          <button class="plan-btn cur" disabled>✓ Current Plan</button>
+        </div>
+        <div class="plan-card hl">
+          <div class="plan-top-badge">✦ Most Popular</div>
+          <div class="plan-ic-row"><div class="plan-ic" style="background:rgba(255,255,255,.18);">📈</div><div><div class="plan-name">Growth</div><div class="plan-desc">For growing brands</div></div></div>
+          <div class="plan-price">$<span id="pp-g">149</span><small>/mo</small></div>
+          <ul class="plan-feats"><li><span class="fc">✓</span>Everything in Starter</li><li><span class="fc">✓</span>Advanced analytics</li><li><span class="fc">✓</span>Competitor tracking</li><li><span class="fc">✓</span>300 AI credits/month</li><li><span class="fc">✓</span>Priority support</li></ul>
+          <button class="plan-btn" onclick="openPay('Growth Plan','$'+document.getElementById('pp-g').textContent+'/mo')">Upgrade to Growth</button>
+        </div>
+        <div class="plan-card">
+          <div class="plan-ic-row"><div class="plan-ic" style="background:#ede7f6;">👑</div><div><div class="plan-name">Premium</div><div class="plan-desc">Full-suite reputation management</div></div></div>
+          <div class="plan-price">$<span id="pp-p">349</span><small>/mo</small></div>
+          <ul class="plan-feats"><li><span class="fc">✓</span>Everything in Growth</li><li><span class="fc">✓</span>White-label reports</li><li><span class="fc">✓</span>Unlimited AI credits</li><li><span class="fc">✓</span>Dedicated account manager</li><li><span class="fc">✓</span>Custom integrations</li></ul>
+          <button class="plan-btn up" onclick="openPay('Premium Plan','$'+document.getElementById('pp-p').textContent+'/mo')">Upgrade to Premium</button>
+        </div>
+      </div>
+      <div class="addons-card">
+        <div class="addons-title">Pay-as-you-go Add-ons</div>
+        <div class="addons-grid">
+          <div class="addon"><div class="addon-lbl">Extra Comment</div><div class="addon-price">$2</div></div>
+          <div class="addon"><div class="addon-lbl">Review Push</div><div class="addon-price">$5</div></div>
+          <div class="addon"><div class="addon-lbl">Mention Alert</div><div class="addon-price">$1</div></div>
+          <div class="addon"><div class="addon-lbl">AI Credit Pack (100)</div><div class="addon-price">$9</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SOCIAL MEDIA ══ -->
+    <div class="section" id="sec-social">
+      <div class="page-hd"><div class="page-title">Social Media</div><div class="page-sub">Track your brand's social presence and performance</div></div>
+      <div class="stab-wrap">
+        <button class="stab on" id="st-ov" onclick="setSocial('ov')">Overview</button>
+        <button class="stab" id="st-po" onclick="setSocial('po')">Recent Posts</button>
+      </div>
+      <div id="soc-ov">
+        <div class="soc-kpi">
+          <div class="soc-kpi-card"><div class="sk-lbl">Total Followers</div><div class="sk-val">12,480</div><div class="sk-ch">↑ +320 this month</div></div>
+          <div class="soc-kpi-card"><div class="sk-lbl">Total Reach</div><div class="sk-val">48.2K</div><div class="sk-ch">↑ +8.4% this month</div></div>
+          <div class="soc-kpi-card"><div class="sk-lbl">Avg. Engagement</div><div class="sk-val">4.7%</div><div class="sk-ch">↑ +0.3% vs last month</div></div>
+        </div>
+        <div class="chart-card" style="margin-bottom:18px;">
+          <div class="ch-head"><span class="ch-title">Monthly Reach & Engagement</span><div class="legend"><span><span class="ldot" style="background:#4caf50;"></span>Reach</span><span><span class="ldot" style="background:#fbbf24;"></span>Engagement</span></div></div>
+          <canvas id="chart3" height="115"></canvas>
+        </div>
+        <div class="plat-grid">
+          <div class="plat-card"><div class="plat-icon">🔴</div><div class="plat-name">YouTube</div><div class="plat-val">3,200</div><div class="plat-ch">↑ +120 subscribers</div></div>
+          <div class="plat-card"><div class="plat-icon">📸</div><div class="plat-name">Instagram</div><div class="plat-val">6,840</div><div class="plat-ch">↑ +180 followers</div></div>
+          <div class="plat-card"><div class="plat-icon">🐦</div><div class="plat-name">Twitter / X</div><div class="plat-val">2,440</div><div class="plat-ch">↑ +20 followers</div></div>
+        </div>
+      </div>
+      <div id="soc-po" style="display:none;">
+        <div class="post-item"><div class="post-ic" style="background:#fce4ec;">📸</div><div><div class="post-text">Just launched our new reputation management feature! 🚀 Track your brand mentions in real-time across all platforms.</div><div class="post-meta"><span>Instagram</span><span><b>142</b> likes</span><span><b>28</b> comments</span><span>2h ago</span></div></div></div>
+        <div class="post-item"><div class="post-ic" style="background:#e3f2fd;">🐦</div><div><div class="post-text">Thread: How we helped a brand go from 2.8 → 4.6 star rating in 60 days using AI-powered reputation tracking. 🧵</div><div class="post-meta"><span>Twitter / X</span><span><b>87</b> likes</span><span><b>34</b> retweets</span><span>1d ago</span></div></div></div>
+        <div class="post-item"><div class="post-ic" style="background:#ffebee;">🔴</div><div><div class="post-text">NEW VIDEO: "How to Monitor Your Brand on Reddit in 2025" — live on YouTube now! Link in bio.</div><div class="post-meta"><span>YouTube</span><span><b>1.2K</b> views</span><span><b>67</b> likes</span><span>3d ago</span></div></div></div>
+        <div class="post-item"><div class="post-ic" style="background:#fce4ec;">📸</div><div><div class="post-text">Customer spotlight: restrosaathi.in helped us identify and respond to 40+ brand mentions this week! 💪</div><div class="post-meta"><span>Instagram</span><span><b>98</b> likes</span><span><b>12</b> comments</span><span>5d ago</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS ══ -->
+    <div class="section" id="sec-settings">
+      <div class="page-hd"><div class="page-title">Settings</div><div class="page-sub">Manage your account and preferences</div></div>
+      <div class="settings-tabs">
+        <button class="set-tab on" onclick="setTab('account',this)">Account</button>
+        <button class="set-tab" onclick="setTab('plan',this)">Plan & Credits</button>
+        <button class="set-tab" onclick="setTab('profile',this)">Edit Profile</button>
+      </div>
+      <!-- Account -->
+      <div class="settings-body on" id="tab-account">
+        <div class="info-card">
+          <div class="info-row"><div class="info-lbl">Full Name</div><div class="info-val" id="set-name">Demo User</div></div>
+          <div class="info-row"><div class="info-lbl">Email</div><div class="info-val" id="set-email">demo@helixorm.com</div></div>
+          <div class="info-row"><div class="info-lbl">Company</div><div class="info-val" id="set-company">—</div></div>
+          <div class="info-row"><div class="info-lbl">Website</div><div class="info-val" id="set-website">—</div></div>
+          <div class="info-row"><div class="info-lbl">Member Since</div><div class="info-val">January 2024</div></div>
+        </div>
+        <button onclick="toast('Logged out!')" style="background:#fee2e2;color:#dc2626;border:none;border-radius:10px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Sign Out</button>
+      </div>
+      <!-- Plan -->
+      <div class="settings-body" id="tab-plan">
+        <div class="plan-info">
+          <div class="plan-badge-lg">Starter</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#111;">You're on the Starter plan</div>
+            <div style="font-size:12px;color:#555;margin-top:3px;">Renews monthly · $49/month</div>
+          </div>
+          <button onclick="nav('pricing',document.querySelector('.nav-btn:nth-child(4)'))" style="margin-left:auto;background:#2e7d32;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Upgrade Plan</button>
+        </div>
+        <div class="credit-info">
+          <div class="credit-num">0</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#111;">AI Credits Remaining</div>
+            <div style="font-size:12px;color:#555;margin-top:3px;">Your plan includes 50 credits/month. Buy more anytime.</div>
+          </div>
+          <button onclick="openCredits()" style="margin-left:auto;background:#f97316;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Buy Credits</button>
+        </div>
+      </div>
+      <!-- Edit Profile -->
+      <div class="settings-body" id="tab-profile">
+        <div class="info-card">
+          <div class="form-group"><label class="form-lbl">Company Name</label><input class="form-input" id="ep-company" value=""/></div>
+          <div class="form-group"><label class="form-lbl">Website</label><input class="form-input" id="ep-website" value=""/></div>
+          <div class="form-group"><label class="form-lbl">Services / Products</label><input class="form-input" id="ep-services" value=""/></div>
+          <div class="form-group"><label class="form-lbl">Target Audience</label><input class="form-input" id="ep-audience" value=""/></div>
+          <div class="form-group"><label class="form-lbl">Target Location</label><input class="form-input" id="ep-location" value=""/></div>
+          <div class="form-group"><label class="form-lbl">Company Description</label><textarea class="form-input" id="ep-desc"></textarea></div>
+          <button class="save-btn" onclick="toast('Profile saved successfully! ✓')">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ════ CREDITS MODAL ════ -->
+<div class="overlay" id="creditsModal">
+  <div class="modal" style="width:430px;max-width:95vw;">
+    <div class="modal-head">
+      <div><div class="modal-title">Buy Credits ✦</div><div class="modal-sub">Power your AI features with credits</div></div>
+      <button class="mclose" onclick="closeOverlay('creditsModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="pkg-grid">
+        <div class="pkg" onclick="selPkg(this,50,'$9')"><div class="pkg-cr">50</div><div class="pkg-pr">$9</div></div>
+        <div class="pkg" onclick="selPkg(this,100,'$16')"><div class="pkg-cr">100</div><div class="pkg-pr">$16</div><div class="pkg-tag">Popular</div></div>
+        <div class="pkg" onclick="selPkg(this,250,'$35')"><div class="pkg-cr">250</div><div class="pkg-pr">$35</div></div>
+        <div class="pkg" onclick="selPkg(this,500,'$65')"><div class="pkg-cr">500</div><div class="pkg-pr">$65</div><div class="pkg-tag">Best Value</div></div>
+        <div class="pkg" onclick="selPkg(this,1000,'$120')"><div class="pkg-cr">1,000</div><div class="pkg-pr">$120</div></div>
+        <div class="pkg" onclick="selPkg(this,2500,'$280')"><div class="pkg-cr">2,500</div><div class="pkg-pr">$280</div></div>
+      </div>
+      <button class="buy-btn" id="buyBtn" disabled>Select a package</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PAYMENT MODAL ════ -->
+<div class="overlay" id="payModal">
+  <div class="modal" style="width:370px;max-width:95vw;">
+    <div class="modal-head">
+      <div><div class="modal-title">Choose Payment Method</div><div class="modal-sub" id="payModalSub">—</div></div>
+      <button class="mclose" onclick="closeOverlay('payModal')">×</button>
+    </div>
+    <div class="modal-body" style="padding-bottom:8px;">
+      <button class="pay-option" onclick="handlePay('Stripe')">
+        <div class="pay-ic" style="background:#e8eaf6;">💳</div>
+        <div><div class="pay-method">Pay with Card</div><div class="pay-detail">Stripe · Visa, Mastercard, AMEX</div></div>
+        <span class="pay-tag" style="background:#e8eaf6;color:#3949ab;">Stripe</span>
+      </button>
+      <button class="pay-option crypto" onclick="handlePay('Cryptomus')">
+        <div class="pay-ic" style="background:#fff3e0;">₿</div>
+        <div><div class="pay-method">Pay with Crypto</div><div class="pay-detail">Cryptomus · BTC, ETH, USDT & more</div></div>
+        <span class="pay-tag" style="background:#fff3e0;color:#e65100;">Crypto</span>
+      </button>
+    </div>
+    <div class="pay-secure">🔒 All transactions are secure and encrypted</div>
+  </div>
+</div>
+
+<!-- ════ HELP MODAL ════ -->
+<div class="overlay" id="helpModal">
+  <div class="modal" style="width:400px;max-width:95vw;">
+    <div class="modal-head">
+      <div><div class="modal-title">Help Center 💬</div><div class="modal-sub">We're here to help — choose an option below</div></div>
+      <button class="mclose" onclick="closeOverlay('helpModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <a class="help-option" href="https://t.me/helixorm" target="_blank">
+        <div class="help-ic" style="background:#e3f2fd;">✈️</div>
+        <div><div class="help-method">Telegram Support</div><div class="help-detail">Chat with us instantly on Telegram</div></div>
+      </a>
+      <a class="help-option" href="mailto:support@helixorm.com">
+        <div class="help-ic" style="background:#e8f5e9;">📧</div>
+        <div><div class="help-method">Email Support</div><div class="help-detail">support@helixorm.com · Reply within 24h</div></div>
+      </a>
+      <div class="help-option" onclick="toggleTicket()" style="user-select:none;">
+        <div class="help-ic" style="background:#fff3e0;">🎫</div>
+        <div><div class="help-method">Submit a Ticket</div><div class="help-detail">Describe your issue and we'll get back to you</div></div>
+      </div>
+      <div class="ticket-form" id="ticketForm">
+        <input class="ticket-input" placeholder="Subject" id="ticketSubject"/>
+        <textarea class="ticket-input" placeholder="Describe your issue..." id="ticketMsg"></textarea>
+        <button class="ticket-btn" onclick="submitTicket()">Send Ticket</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toastEl"></div>
+</div>
+
+<script>
+  // ════════════════════════════════════════════
+  // ONBOARDING SCRIPT (from ui-final, unchanged)
+  // ════════════════════════════════════════════
+  let currentStep = 0;
+  let userData = { company: 'Helix ORM', website: '', name: 'Demo User', email: 'demo@helixorm.com' };
+
+  // ── ONBOARDING STEP MANAGEMENT ─────────────
+  function goStep(n) {
+    document.getElementById('step' + currentStep).style.display = 'none';
+    currentStep = n;
+    document.getElementById('step' + n).style.display = 'flex';
+    updateStepUI(n);
+    updateRightPanel(n);
+  }
+
+  function updateStepUI(n) {
+    for (let i = 0; i < 3; i++) {
+      const sc = document.getElementById('sc' + i);
+      if (i < n) { sc.className = 'step-circle done'; sc.innerHTML = '✓'; }
+      else if (i === n) { sc.className = 'step-circle active'; sc.innerHTML = i + 1; }
+      else { sc.className = 'step-circle inactive'; sc.innerHTML = i + 1; }
+    }
+    document.getElementById('sl01').className = 'step-line ' + (n > 0 ? 'done' : 'inactive');
+    document.getElementById('sl12').className = 'step-line ' + (n > 1 ? 'done' : 'inactive');
+  }
+
+  function updateRightPanel(n) {
+    const rc = document.getElementById('rightContent');
+    if (n === 0) {
+      rc.innerHTML = `
+        <h2 class="right-title">Reddit Brand Monitoring</h2>
+        <p class="right-sub">Find the conversations that matter and get your brand in front of the right audience.</p>
+        <div class="reddit-card">
+          <div class="reddit-row"><div class="reddit-r">R</div><span class="reddit-label">r/entrepreneur · Trending</span></div>
+          <div class="reddit-row"><div class="reddit-r">R</div><span class="reddit-label">r/marketing · Top</span></div>
+          <div class="reddit-row"><div class="reddit-r">R</div><span class="reddit-label">r/smallbusiness · Hot</span></div>
+        </div>`;
+    } else if (n === 1) {
+      rc.innerHTML = `
+        <h2 class="right-title">Your brand is ready!</h2>
+        <div class="check-list">
+          <div class="check-item"><div class="check-circle done">✓</div><div><div class="check-item-title">Website analyzed</div><div class="check-item-sub">Scanning your site to understand products, services, and core messaging.</div></div></div>
+          <div class="check-item"><div class="check-circle done">✓</div><div><div class="check-item-title">Keywords discovered</div><div class="check-item-sub">Finding the topics and phrases your audience actively searches for.</div></div></div>
+          <div class="check-item"><div class="check-circle done">✓</div><div><div class="check-item-title">Description generated</div><div class="check-item-sub">Creating a clear, AI-powered summary of your business for engagement.</div></div></div>
+        </div>`;
+      rc.querySelectorAll('.check-circle.done').forEach(el => { el.style.background='#fff'; el.style.borderColor='#fff'; el.style.color='#f97316'; });
+    } else {
+      rc.innerHTML = `
+        <h2 class="right-title">Stay Ahead of the Competition</h2>
+        <p class="right-sub">Discover the threads your competitors target, track their moves, and use Helix ORM to win high-intent conversations.</p>
+        <div class="competitor-preview">
+          <div class="comp-header">
+            <div class="comp-user"><div class="comp-avatar"></div><p class="comp-name">Marionbell <span class="comp-action">commented on post</span></p></div>
+            <span class="comp-brand">reddit</span>
+          </div>
+          <p class="comp-quote">"Honestly, negative reviews are dead weight. One Helix ORM campaign and our ratings flipped."</p>
+          <p class="comp-meta">384 upvotes · r/entrepreneur · 3h</p>
+        </div>`;
+    }
+  }
+
+  // ── WEBSITE CONTINUE ──────────────────────
+  document.getElementById('websiteInput').addEventListener('input', function() {
+    document.getElementById('btn0').disabled = !this.value;
+  });
+  document.getElementById('websiteInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value) handleWebsiteContinue();
+  });
+
+  async function handleWebsiteContinue() {
+    const w = document.getElementById('websiteInput').value;
+    if (!w) return;
+    
+    userData.website = w;
+    const domain = w.replace(/https?:\/\//, '').replace(/www\./, '').split('/')[0];
+
+    const loader = document.getElementById('analyzingLoader');
+    loader.classList.add('show');
+    document.getElementById('analyzingUrl').textContent = w;
+
+    setTimeout(() => tickAnalyze(0), 800);
+    setTimeout(() => tickAnalyze(1), 2200);
+    setTimeout(() => tickAnalyze(2), 3600);
+
+    let aiData = {};
+    try {
+        const res = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: w })
+        });
+        aiData = await res.json();
+        // DEBUG: Exact API response console mein dekho
+        console.log('API response:', JSON.stringify(aiData, null, 2));
+    } catch (err) {
+        console.error('API call failed:', err);
+    }
+
+    // Description from backend
+    let finalDescription = aiData.description || '';
+
+    setTimeout(() => {
+        loader.classList.remove('show');
+
+        // 1. Fill Company Name
+        const nameInput = document.getElementById('companyNameInput');
+        nameInput.value = aiData.companyName || domain;
+
+        // 2. Fill Description
+        const descInput = document.getElementById('descriptionInput');
+        if (finalDescription) {
+            descInput.value = finalDescription;
+            document.getElementById('descCount').textContent = finalDescription.length + '/1600 characters';
+        }
+
+        // 3. Fill Competitors
+        if (aiData.competitors && aiData.competitors.length) {
+            aiData.competitors.forEach((comp, i) => {
+                const compEl = document.getElementById('comp' + i);
+                if (compEl) compEl.value = comp;
+            });
+        }
+
+        // 4. Enable Continue button
+        const nextBtn = document.getElementById('btn1');
+        if (nextBtn) {
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = '1';
+        }
+
+        goStep(1);
+    }, 4500);
+}
+
+  function tickAnalyze(i) {
+    const row = document.getElementById('cl' + i);
+    row.style.opacity = '1';
+    row.style.background = '#fff7ed';
+    row.style.borderColor = '#fed7aa';
+    const circle = row.querySelector('.cl-circle');
+    circle.style.background = '#f97316';
+    circle.style.borderColor = '#f97316';
+    circle.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+    const rcc = document.getElementById('rcc' + i);
+    if (rcc) { rcc.classList.add('done'); rcc.style.background='#fff'; rcc.style.borderColor='#fff'; rcc.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'; }
+  }
+
+  // ── COMPANY NAME INPUT ────────────────────
+  document.getElementById('companyNameInput').addEventListener('input', function() {
+    document.getElementById('btn1').disabled = !this.value;
+  });
+  document.getElementById('descriptionInput').addEventListener('input', function() {
+    document.getElementById('descCount').textContent = this.value.length + '/1600 characters';
+  });
+
+  // ── COMPLETE ONBOARDING ───────────────────
+
+
+  // ── COMPLETE ONBOARDING — switch to dashboard, sync data ───────
+  function completeOnboarding() {
+    // 1) Read values from onboarding inputs
+    const company = (document.getElementById('companyNameInput').value || '').trim() || 'Helix ORM';
+    const website = (document.getElementById('websiteInput').value || '').trim();
+    const description = (document.getElementById('descriptionInput')?.value || '').trim();
+    const location = document.getElementById('locationSelect')?.value || '';
+    const competitors = [];
+    for (let i = 0; i < 3; i++) {
+      const v = (document.getElementById('comp' + i)?.value || '').trim();
+      if (v) competitors.push(v);
+    }
+
+    // Persist on global state for any later use
+    userData.company = company;
+    userData.website = website;
+    userData.description = description;
+    userData.location = location;
+    userData.competitors = competitors;
+
+    // 2) Hide onboarding, show dashboard
+    document.getElementById('onboardingWrap').style.display = 'none';
+    document.getElementById('dashboardWrap').style.display = 'flex';
+
+    // 3) Sync sidebar – company avatar/name
+    const initial = company.charAt(0).toUpperCase();
+    const compAv = document.querySelector('#dashboardWrap .co-av');
+    const compName = document.querySelector('#dashboardWrap .co-name');
+    if (compAv) compAv.textContent = initial;
+    if (compName) compName.textContent = company;
+
+    // 4) Sync sidebar – user avatar/name/email (kept from default)
+    const userAv = document.querySelector('#dashboardWrap .user-av');
+    const userName = document.querySelector('#dashboardWrap .user-name');
+    const userEmail = document.querySelector('#dashboardWrap .user-email');
+    if (userAv) userAv.textContent = (userData.name || 'D').charAt(0).toUpperCase();
+    if (userName) userName.textContent = userData.name || 'Demo User';
+    if (userEmail) userEmail.textContent = userData.email || 'demo@helixorm.com';
+
+    // 5) Sync OVERVIEW header line with company name
+    const ovWelcome = document.getElementById('ov-welcome');
+    const ovName = document.getElementById('ov-welcome-name');
+    if (ovName) ovName.textContent = 'Welcome to ' + company + ' 👋';
+    if (ovWelcome) ovWelcome.textContent = "Here's your brand performance for " + (company || website || '—');
+
+    // 6) Sync TARGET section
+    const tgCompany = document.getElementById('tg-company');
+    const tgLocation = document.getElementById('tg-location');
+    const tgDesc = document.getElementById('tg-desc');
+    const tgComps = document.getElementById('tg-competitors');
+    if (tgCompany) tgCompany.textContent = company + (website ? ' (' + website + ')' : '');
+    if (tgLocation && location) tgLocation.textContent = location;
+    if (tgDesc && description) tgDesc.textContent = description;
+    if (tgComps) {
+      tgComps.innerHTML = competitors.length
+        ? competitors.map(c => '<div style="padding:4px 0;color:#444;">• ' + c + '</div>').join('')
+        : '<div style="color:#aaa;">No competitors added.</div>';
+    }
+
+    // 7) Sync SETTINGS – Account info card
+    const setName = document.getElementById('set-name');
+    const setEmail = document.getElementById('set-email');
+    const setCompany = document.getElementById('set-company');
+    const setWebsite = document.getElementById('set-website');
+    if (setName) setName.textContent = userData.name || 'Demo User';
+    if (setEmail) setEmail.textContent = userData.email || 'demo@helixorm.com';
+    if (setCompany) setCompany.textContent = company;
+    if (setWebsite) setWebsite.textContent = website || '—';
+
+    // 8) Sync SETTINGS – Edit Profile inputs
+    const epCompany = document.getElementById('ep-company');
+    const epWebsite = document.getElementById('ep-website');
+    const epLocation = document.getElementById('ep-location');
+    const epDesc = document.getElementById('ep-desc');
+    if (epCompany) epCompany.value = company;
+    if (epWebsite) epWebsite.value = website;
+    if (epLocation) epLocation.value = location;
+    if (epDesc) epDesc.value = description;
+
+    // 9) Initialize dashboard charts (charts need to render after the
+    //    dashboard becomes visible, otherwise canvas size is 0).
+    if (typeof initDashboardCharts === 'function') initDashboardCharts();
+  }
+
+
+  // ════════════════════════════════════════════
+  // DASHBOARD SCRIPT (from dashboard file)
+  // Charts wrapped in initDashboardCharts() so they only render
+  // after the dashboard is visible (canvases need real dimensions).
+  // ════════════════════════════════════════════
+// ── NAV ──
+const SECTIONS = ['overview','target','pricing','social','settings'];
+function nav(id, btn) {
+  SECTIONS.forEach(s => document.getElementById('sec-'+s).classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const labels = {overview:'Overview',target:'Target',pricing:'Pricing',social:'Social Media',settings:'Settings'};
+  document.getElementById('topTitle').textContent = labels[id]||id;
+  if(id==='social') initChart3();
+}
+
+// ── SETTINGS TABS ──
+function setTab(id, btn) {
+  document.querySelectorAll('.settings-body').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  document.querySelectorAll('.set-tab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ── BILLING ──
+const BASE = {s:49,g:149,p:349};
+function setBilling(mode) {
+  document.getElementById('btog-m').classList.toggle('on', mode==='monthly');
+  document.getElementById('btog-a').classList.toggle('on', mode==='annual');
+  const m = mode==='annual'?.8:1;
+  document.getElementById('pp-s').textContent = Math.round(BASE.s*m);
+  document.getElementById('pp-g').textContent = Math.round(BASE.g*m);
+  document.getElementById('pp-p').textContent = Math.round(BASE.p*m);
+}
+
+// ── SOCIAL TABS ──
+function setSocial(tab) {
+  document.getElementById('st-ov').classList.toggle('on', tab==='ov');
+  document.getElementById('st-po').classList.toggle('on', tab==='po');
+  document.getElementById('soc-ov').style.display = tab==='ov'?'block':'none';
+  document.getElementById('soc-po').style.display = tab==='po'?'block':'none';
+}
+
+// ── OVERLAYS ──
+function openOverlay(id) { document.getElementById(id).classList.add('open'); }
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); }));
+
+// ── CREDITS ──
+let selCredits=null, selPrice=null;
+function openCredits() { selCredits=null; selPrice=null; document.querySelectorAll('.pkg').forEach(p=>p.classList.remove('sel')); document.getElementById('buyBtn').disabled=true; document.getElementById('buyBtn').textContent='Select a package'; openOverlay('creditsModal'); }
+function selPkg(el, cr, pr) {
+  selCredits=cr; selPrice=pr;
+  document.querySelectorAll('.pkg').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+  const b=document.getElementById('buyBtn');
+  b.disabled=false; b.textContent=`Buy ${cr} Credits for ${pr}`;
+  b.onclick=()=>{ closeOverlay('creditsModal'); openPay(cr+' Credits',pr); };
+}
+
+// ── PAYMENT ──
+function openPay(label, price) {
+  document.getElementById('payModalSub').textContent = label+' — '+price;
+  openOverlay('payModal');
+}
+function handlePay(method) {
+  closeOverlay('payModal');
+  toast('Redirecting to '+method+' payment... 🔒');
+}
+
+// ── HELP ──
+function openHelp() { document.getElementById('ticketForm').classList.remove('open'); openOverlay('helpModal'); }
+function toggleTicket() { document.getElementById('ticketForm').classList.toggle('open'); }
+function submitTicket() {
+  const s=document.getElementById('ticketSubject').value.trim();
+  const m=document.getElementById('ticketMsg').value.trim();
+  if(!s||!m){ toast('Please fill in all fields.'); return; }
+  closeOverlay('helpModal');
+  toast('Ticket submitted! We\'ll reply within 24h ✓');
+  document.getElementById('ticketSubject').value='';
+  document.getElementById('ticketMsg').value='';
+}
+
+// ── TOAST ──
+function toast(msg) {
+  const el=document.getElementById('toastEl');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ── CHARTS (lazy init, called from completeOnboarding) ──
+let __chartsInit = false;
+function initDashboardCharts() {
+  if (__chartsInit) return;
+  __chartsInit = true;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun'];
+
+  new Chart(document.getElementById('chart1'),{type:'line',data:{labels:months,datasets:[
+    {data:[30,40,45,55,65,72],borderColor:'#5b9cf6',backgroundColor:'rgba(91,156,246,.08)',fill:true,tension:.4,pointRadius:0,borderWidth:2},
+    {data:[15,22,28,38,50,60],borderColor:'#f97316',backgroundColor:'rgba(249,115,22,.06)',fill:true,tension:.4,pointRadius:0,borderWidth:2}
+  ]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#aaa'}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#aaa'},min:0,max:100}}}});
+
+  new Chart(document.getElementById('chart2'),{type:'line',data:{labels:months,datasets:[
+    {data:[20,30,40,55,70,88],borderColor:'#4caf50',backgroundColor:'rgba(76,175,80,.12)',fill:true,tension:.4,pointRadius:0,borderWidth:2},
+    {data:[10,18,25,35,48,62],borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,.08)',fill:true,tension:.4,pointRadius:0,borderWidth:2}
+  ]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#aaa'}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#aaa'},min:0,max:100}}}});
+}
+
+// chart3 (social media tab) – stays lazy
+let c3=false;
+function initChart3(){
+  if(c3) return; c3=true;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun'];
+  new Chart(document.getElementById('chart3'),{type:'line',data:{labels:months,datasets:[
+    {data:[25,38,50,62,75,90],borderColor:'#4caf50',backgroundColor:'rgba(76,175,80,.1)',fill:true,tension:.4,pointRadius:0,borderWidth:2},
+    {data:[12,20,30,38,50,65],borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,.08)',fill:true,tension:.4,pointRadius:0,borderWidth:2}
+  ]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#aaa'}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#aaa'},min:0,max:100}}}});
+}
+</script>
+</body>
+</html>
