@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const auditOptions = [
   "Google Reviews",
@@ -10,8 +12,10 @@ const auditOptions = [
 ];
 
 export default function AuditRequestForm() {
+  const router = useRouter();
   const [selectedAreas, setSelectedAreas] = useState<string[]>(auditOptions);
-  const [emailNotice, setEmailNotice] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function toggleArea(area: string) {
     setSelectedAreas((current) =>
@@ -21,28 +25,49 @@ export default function AuditRequestForm() {
     );
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") ?? "").trim();
-    const email = String(form.get("email") ?? "").trim();
-    const company = String(form.get("company") ?? "").trim();
-    const website = String(form.get("website") ?? "").trim();
-    const brand = String(form.get("brand") ?? "").trim();
-    const concern = String(form.get("concern") ?? "").trim();
-    const message = [
-      `Name: ${name}`,
-      `Work email: ${email}`,
-      `Company: ${company || "Not provided"}`,
-      `Website: ${website || "Not provided"}`,
-      `Brand or name to audit: ${brand}`,
-      `Areas to include: ${selectedAreas.length ? selectedAreas.join(", ") : "Not specified"}`,
-      `Main concern: ${concern || "Not provided"}`,
-    ].join("\n");
-    const subject = `Reputation audit request — ${brand}`;
+    if (isSubmitting) return;
 
-    setEmailNotice("Your email app should open with your request ready. If it doesn't, email info@helixorm.com.");
-    window.location.href = `mailto:info@helixorm.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    const form = new FormData(event.currentTarget);
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/inquiries/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "audit",
+          name: String(form.get("name") ?? "").trim(),
+          email: String(form.get("email") ?? "").trim(),
+          company: String(form.get("company") ?? "").trim(),
+          website: String(form.get("website") ?? "").trim(),
+          brand: String(form.get("brand") ?? "").trim(),
+          areas: selectedAreas,
+          concern: String(form.get("concern") ?? "").trim(),
+        }),
+      });
+
+      let result: { success?: boolean; error?: string };
+      try {
+        result = await response.json();
+      } catch {
+        setErrorMessage("We couldn’t confirm delivery. Please email info@helixorm.com.");
+        return;
+      }
+
+      if (!response.ok || !result.success) {
+        setErrorMessage(result.error ?? "Your request could not be sent. Please email info@helixorm.com.");
+        return;
+      }
+
+      router.push("/thank-you/");
+    } catch {
+      setErrorMessage("We couldn’t connect to send your request. Please email info@helixorm.com.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -100,14 +125,18 @@ export default function AuditRequestForm() {
 
       <div className="audit-form-submit">
         <p>
-          Your details are used only to respond to this request. Submitting
-          opens an email draft in your email app; this site does not store your
-          information.
+          We use your details to respond to your request. Read our{" "}
+          <Link href="/privacy-policy/">Privacy Policy</Link>.
         </p>
-        <button className="button button-dark" type="submit">
-          Open email to request my audit <span aria-hidden="true">↗</span>
+        <button className="button button-dark" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Sending your request…" : "Send audit request"} <span aria-hidden="true">↗</span>
         </button>
-        <p className="audit-email-notice" aria-live="polite">{emailNotice}</p>
+        {errorMessage && (
+          <p className="audit-email-notice" role="alert">
+            {errorMessage}{" "}
+            <a href="mailto:info@helixorm.com">Email us directly</a>.
+          </p>
+        )}
       </div>
     </form>
   );

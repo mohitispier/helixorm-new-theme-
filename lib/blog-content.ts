@@ -15,6 +15,10 @@ export type BlogArticle = {
   sections: BlogArticleSection[];
   service: string;
   serviceLabel: string;
+  contextualService?: string;
+  contextualServiceLabel?: string;
+  contextualServiceSection?: number;
+  relatedArticles: string[];
 };
 
 export type BlogCategory = {
@@ -22,6 +26,8 @@ export type BlogCategory = {
   title: string;
   description: string;
   number: string;
+  service: string;
+  serviceLabel: string;
 };
 
 export const blogCategories: BlogCategory[] = [
@@ -31,6 +37,8 @@ export const blogCategories: BlogCategory[] = [
     description:
       "Thoughtful ways to listen to reviews, respond to customer concerns, and learn from genuine feedback.",
     number: "01",
+    service: "review-management",
+    serviceLabel: "Explore review management",
   },
   {
     slug: "getting-started",
@@ -38,6 +46,8 @@ export const blogCategories: BlogCategory[] = [
     description:
       "Understand the reputation signals around your brand and find a sensible place to begin.",
     number: "02",
+    service: "reputation-audit-consulting",
+    serviceLabel: "Explore reputation audits",
   },
   {
     slug: "search-visibility",
@@ -45,6 +55,8 @@ export const blogCategories: BlogCategory[] = [
     description:
       "Make sense of the sources and information people find when they search for your brand.",
     number: "03",
+    service: "search-reputation",
+    serviceLabel: "Explore search reputation",
   },
   {
     slug: "online-communities",
@@ -52,6 +64,8 @@ export const blogCategories: BlogCategory[] = [
     description:
       "Explore transparent, community-aware ways to understand and participate in online conversations.",
     number: "04",
+    service: "social-media-reputation",
+    serviceLabel: "Explore social media reputation",
   },
   {
     slug: "crisis-response",
@@ -59,6 +73,8 @@ export const blogCategories: BlogCategory[] = [
     description:
       "Respond thoughtfully when a reputation issue moves quickly across reviews, search, and public conversations.",
     number: "05",
+    service: "crisis-management",
+    serviceLabel: "Explore crisis management",
   },
 ];
 
@@ -98,6 +114,10 @@ export const blogArticles: BlogArticle[] = [
     ],
     service: "review-management",
     serviceLabel: "Explore review management",
+    contextualService: "google-reviews",
+    contextualServiceLabel: "Google Reviews Management",
+    contextualServiceSection: 0,
+    relatedArticles: ["reputation-audit", "responding-to-reputation-crisis"],
   },
   {
     slug: "reputation-audit",
@@ -133,6 +153,10 @@ export const blogArticles: BlogArticle[] = [
     ],
     service: "reputation-audit-consulting",
     serviceLabel: "Explore reputation audits",
+    contextualService: "search-reputation",
+    contextualServiceLabel: "search reputation and digital PR",
+    contextualServiceSection: 1,
+    relatedArticles: ["responding-to-reviews", "brand-in-search"],
   },
   {
     slug: "brand-in-search",
@@ -169,6 +193,10 @@ export const blogArticles: BlogArticle[] = [
     ],
     service: "search-reputation",
     serviceLabel: "Explore search reputation",
+    contextualService: "google-search",
+    contextualServiceLabel: "Google Search Reputation Management",
+    contextualServiceSection: 1,
+    relatedArticles: ["reputation-audit", "responding-to-reputation-crisis"],
   },
   {
     slug: "reddit-community-trust",
@@ -205,6 +233,10 @@ export const blogArticles: BlogArticle[] = [
     ],
     service: "reddit-reputation",
     serviceLabel: "Explore Reddit reputation management",
+    contextualService: "social-media-reputation",
+    contextualServiceLabel: "social media reputation management",
+    contextualServiceSection: 0,
+    relatedArticles: ["responding-to-reviews", "responding-to-reputation-crisis"],
   },
   {
     slug: "responding-to-reputation-crisis",
@@ -239,8 +271,12 @@ export const blogArticles: BlogArticle[] = [
         ],
       },
     ],
-    service: "reputation-audit-consulting",
-    serviceLabel: "Explore reputation audits",
+    service: "crisis-management",
+    serviceLabel: "Explore reputation crisis management",
+    contextualService: "reddit-reputation",
+    contextualServiceLabel: "Reddit Reputation Management",
+    contextualServiceSection: 2,
+    relatedArticles: ["reputation-audit", "reddit-community-trust"],
   },
 ];
 
@@ -254,4 +290,11 @@ export function getBlogArticle(slug: string) {
 
 export function getArticlesForCategory(categorySlug: string) {
   return blogArticles.filter((article) => article.categorySlug === categorySlug);
+}
+
+export function getRelatedArticles(articleSlug: string, relatedSlugs: string[]) {
+  return relatedSlugs
+    .filter((slug) => slug !== articleSlug)
+    .map((slug) => getBlogArticle(slug))
+    .filter((article) => article !== undefined);
 }

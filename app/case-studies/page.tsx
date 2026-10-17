@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import { canonicalUrl } from "../../lib/site";
+import { getServiceHref } from "../../lib/services";
 
 export const metadata: Metadata = {
   title: "Reputation Management Case Studies | Helix ORM",
   description:
     "Explore the kinds of reputation challenges Helix ORM helps businesses understand across reviews, online communities, and search.",
+  alternates: { canonical: canonicalUrl("/case-studies/") },
 };
 
 const caseStudyPreviews = [
@@ -18,6 +21,7 @@ const caseStudyPreviews = [
     imageAlt: "A welcoming local business with a customer and team member",
     challenge: "Feedback and response practices can vary from one location to another.",
     approach: "Create clearer review-request workflows and practical response guidance.",
+    serviceSlug: "google-reviews",
   },
   {
     topic: "Trustpilot & Reddit",
@@ -27,6 +31,7 @@ const caseStudyPreviews = [
     imageAlt: "Colleagues collaborating around a table",
     challenge: "Product conversations can be spread across review sites and communities.",
     approach: "Listen for recurring themes and participate transparently where appropriate.",
+    serviceSlug: "reddit-reputation",
   },
   {
     topic: "Search reputation",
@@ -36,6 +41,7 @@ const caseStudyPreviews = [
     imageAlt: "A person reviewing search and analytics information on a laptop",
     challenge: "Branded searches may surface scattered or outdated information.",
     approach: "Review key results and strengthen accurate, useful owned information.",
+    serviceSlug: "google-search",
   },
 ];
 
@@ -103,6 +109,9 @@ export default function CaseStudiesPage() {
                       <p>{study.approach}</p>
                     </div>
                   </div>
+                  <Link className="case-study-service-link" href={getServiceHref(study.serviceSlug)}>
+                    Explore this service <span aria-hidden="true">↗</span>
+                  </Link>
                 </div>
               </article>
             ))}

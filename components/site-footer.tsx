@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { blogCategories } from "../lib/blog-content";
 import { featuredServices, getServiceHref } from "../lib/services";
 
 export default function SiteFooter() {
@@ -33,9 +34,17 @@ export default function SiteFooter() {
           <Link href="/contact/">Contact us</Link>
         </nav>
         <nav className="footer-links" aria-label="Resources">
-          <strong>Explore</strong>
+          <strong>Resources</strong>
           <Link href="/blog/">Insights & resources</Link>
+          {blogCategories.map((category) => (
+            <Link href={`/blog/${category.slug}/`} key={category.slug}>{category.title}</Link>
+          ))}
           <Link href="/reputation-audit/">Reputation audit</Link>
+        </nav>
+        <nav className="footer-links" aria-label="Legal">
+          <strong>Legal</strong>
+          <Link href="/privacy-policy/">Privacy Policy</Link>
+          <Link href="/terms-of-service/">Terms of Service</Link>
         </nav>
       </div>
       <div className="footer-bottom"><span>© 2026 Helix ORM</span><span>Reputation, built on what’s real.</span><Link href="/contact/">Contact us <span aria-hidden="true">↗</span></Link></div>

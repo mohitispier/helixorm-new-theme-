@@ -9,8 +9,10 @@ import {
   getArticlesForCategory,
   getBlogArticle,
   getBlogCategory,
+  getRelatedArticles,
 } from "../../../lib/blog-content";
-import { getServiceHref } from "../../../lib/services";
+import { getServiceBySlug, getServiceHref } from "../../../lib/services";
+import { canonicalUrl } from "../../../lib/site";
 
 export function generateStaticParams() {
   return [
@@ -31,6 +33,7 @@ export async function generateMetadata({
     return {
       title: `${category.title} | Helix ORM Insights`,
       description: category.description,
+      alternates: { canonical: canonicalUrl(`/blog/${category.slug}/`) },
     };
   }
 
@@ -40,6 +43,7 @@ export async function generateMetadata({
     return {
       title: `${article.title} | Helix ORM`,
       description: article.excerpt,
+      alternates: { canonical: canonicalUrl(`/blog/${article.slug}/`) },
     };
   }
 
@@ -61,6 +65,7 @@ export default async function BlogEntryPage({
 
   if (category) {
     const categoryArticles = getArticlesForCategory(category.slug);
+    const categoryService = getServiceBySlug(category.service);
 
     return (
       <>
@@ -81,6 +86,14 @@ export default async function BlogEntryPage({
               <Link className="text-link" href="/blog/">
                 <span aria-hidden="true">←</span> Back to all insights
               </Link>
+              {categoryService && (
+                <div className="blog-category-service-link">
+                  <span>Related service</span>
+                  <Link href={getServiceHref(categoryService.slug)}>
+                    {category.serviceLabel} <span aria-hidden="true">↗</span>
+                  </Link>
+                </div>
+              )}
             </div>
             <div
               className={`blog-taxonomy-art blog-topic-${category.slug}`}
@@ -145,6 +158,10 @@ export default async function BlogEntryPage({
   }
 
   const articleCategory = getBlogCategory(article.categorySlug);
+  const relatedArticles = getRelatedArticles(article.slug, article.relatedArticles);
+  const contextualService = article.contextualService
+    ? getServiceBySlug(article.contextualService)
+    : undefined;
 
   return (
     <>
@@ -204,6 +221,14 @@ export default async function BlogEntryPage({
                   <p className="blog-article-section-number">0{index + 1} / A CLOSER LOOK</p>
                   <h2>{section.heading}</h2>
                   {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  {contextualService && article.contextualServiceSection === index && (
+                    <p className="blog-article-inline-link">
+                      For support with this area, explore{" "}
+                      <Link href={getServiceHref(contextualService.slug)}>
+                        {article.contextualServiceLabel ?? contextualService.title}
+                      </Link>.
+                    </p>
+                  )}
                 </section>
               ))}
               <div className="blog-article-service">
@@ -215,6 +240,16 @@ export default async function BlogEntryPage({
               <Link className="blog-article-back" href={`/blog/${article.categorySlug}/`}>
                 <span aria-hidden="true">←</span> More in {article.category}
               </Link>
+              {relatedArticles.length > 0 && (
+                <nav className="blog-related-reading" aria-label="Related articles">
+                  <p className="eyebrow">Keep exploring</p>
+                  {relatedArticles.map((relatedArticle) => (
+                    <Link href={`/blog/${relatedArticle.slug}/`} key={relatedArticle.slug}>
+                      {relatedArticle.title} <span aria-hidden="true">↗</span>
+                    </Link>
+                  ))}
+                </nav>
+              )}
             </div>
           </div>
         </article>

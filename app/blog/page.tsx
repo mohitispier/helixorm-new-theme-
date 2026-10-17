@@ -4,11 +4,14 @@ import BlogArticleBrowser from "../../components/blog-article-browser";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
 import { blogCategories } from "../../lib/blog-content";
+import { featuredServices, getServiceHref } from "../../lib/services";
+import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
   title: "Insights & Resources | Helix ORM",
   description:
     "Practical perspectives on online reviews, search visibility, brand reputation, and authentic community engagement.",
+  alternates: { canonical: canonicalUrl("/blog/") },
 };
 
 export default function BlogPage() {
@@ -82,6 +85,24 @@ export default function BlogPage() {
                   <p>{category.description}</p>
                 </div>
                 <span className="blog-category-arrow" aria-hidden="true">↗</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="blog-service-links" aria-labelledby="blog-services-title">
+          <div className="blog-section-heading">
+            <div>
+              <p className="eyebrow">Put an insight into practice</p>
+              <h2 id="blog-services-title">Explore related services.</h2>
+            </div>
+            <p>Learn about the support connected to the topics covered in our guides.</p>
+          </div>
+          <div className="blog-service-link-grid">
+            {featuredServices.map((service) => (
+              <Link href={getServiceHref(service.slug)} key={service.slug}>
+                <span>{service.title}</span>
+                <span aria-hidden="true">↗</span>
               </Link>
             ))}
           </div>

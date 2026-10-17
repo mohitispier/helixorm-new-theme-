@@ -3,11 +3,13 @@ import Link from "next/link";
 import AuditRequestForm from "../../components/audit-request-form";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
   title: "Request a Reputation Audit | Helix ORM",
   description:
     "Get a clearer picture of how your brand appears across reviews, search, and relevant online conversations. Request a no-pressure reputation audit.",
+  alternates: { canonical: canonicalUrl("/reputation-audit/") },
 };
 
 const auditAreas = [

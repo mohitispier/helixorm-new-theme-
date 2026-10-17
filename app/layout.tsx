@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { siteUrl } from "../lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: "Helix ORM | Build a reputation people trust",
   description:
     "Build a stronger online reputation with genuine customer reviews, professional response management, and more accurate search visibility.",

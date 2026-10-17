@@ -3,11 +3,13 @@ import Link from "next/link";
 import ContactInquiryForm from "../../components/contact-inquiry-form";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
   title: "Contact Helix ORM",
   description:
     "Talk with Helix ORM about reviews, search results, and the conversations shaping your brand’s online reputation.",
+  alternates: { canonical: canonicalUrl("/contact/") },
 };
 
 const contactDetails = [

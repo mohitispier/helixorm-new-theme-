@@ -3,11 +3,13 @@ import Link from "next/link";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
 import { categories, featuredServices, getServiceHref } from "../../lib/services";
+import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
   title: "Reputation Management Services | Helix ORM",
   description:
     "Explore Helix ORM's featured reputation services and full range of review, search, social, and brand protection support.",
+  alternates: { canonical: canonicalUrl("/reputation-management/") },
 };
 
 const categoryMarks = ["▤", "⌕", "✳", "◉", "▧", "◎", "◇", "♧", "▣", "↗", "⌁"];

@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import Link from "next/link";
 import { categories, featuredServices, getServiceHref } from "../lib/services";
+import { canonicalUrl } from "../lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/") },
+};
 
 export default function Home() {
   return (

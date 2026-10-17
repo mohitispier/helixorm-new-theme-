@@ -3,12 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteFooter from "../../../components/site-footer";
 import SiteHeader from "../../../components/site-header";
+import { blogArticles } from "../../../lib/blog-content";
 import { getServicePageContent } from "../../../lib/service-page-content";
 import {
   getServiceBySlug,
   getServiceHref,
   services,
 } from "../../../lib/services";
+import { canonicalUrl } from "../../../lib/site";
 
 export function generateStaticParams() {
   return services.map(({ slug }) => ({ slug }));
@@ -29,6 +31,7 @@ export async function generateMetadata({
   return {
     title: `${service.title} | Helix ORM`,
     description: service.description,
+    alternates: { canonical: canonicalUrl(getServiceHref(service.slug)) },
   };
 }
 
@@ -70,6 +73,12 @@ export default async function ServicePage({
   const relatedServices = service.related
     .map(getServiceBySlug)
     .filter((related) => related !== undefined);
+  const relatedArticles = blogArticles.filter(
+    (article) =>
+      article.service === service.slug ||
+      article.service === parent?.slug ||
+      service.related.includes(article.service),
+  );
 
   return (
     <>
@@ -159,6 +168,16 @@ export default async function ServicePage({
             </a>
           </div>
         </section>
+
+        <nav className="service-section-nav" aria-label="On this page">
+          <span>ON THIS PAGE</span>
+          <a href="#service-problem"><i>01</i> The problem</a>
+          <a href="#what-we-manage"><i>02</i> What we manage</a>
+          <a href="#our-approach"><i>03</i> Our approach</a>
+          <a href="#what-to-expect"><i>04</i> What to expect</a>
+          <a href="#why-helixorm"><i>05</i> Why HelixORM</a>
+          <a href="#faqs"><i>06</i> FAQs</a>
+        </nav>
 
         <section className="service-problem-section" id="service-problem">
           <div className="service-section-inner service-problem-grid">
@@ -310,6 +329,16 @@ export default async function ServicePage({
                 <Link className="text-link service-parent-link" href={getServiceHref(parent.slug)}>
                   Explore {parent.title} <span aria-hidden="true">↗</span>
                 </Link>
+              )}
+              {relatedArticles.length > 0 && (
+                <nav className="service-related-reading" aria-label="Related insights">
+                  <p className="eyebrow">Related insights</p>
+                  {relatedArticles.map((article) => (
+                    <Link href={`/blog/${article.slug}/`} key={article.slug}>
+                      {article.title} <span aria-hidden="true">↗</span>
+                    </Link>
+                  ))}
+                </nav>
               )}
             </div>
           </section>

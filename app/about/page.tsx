@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
   title: "About Helix ORM | Reputation, built on what’s real",
   description:
     "Meet Helix ORM and learn about our thoughtful, transparent approach to online reputation management.",
+  alternates: { canonical: canonicalUrl("/about/") },
 };
 
 const principles = [
@@ -116,6 +118,9 @@ export default function AboutPage() {
             </p>
             <Link className="text-link" href="/reputation-audit/">
               Start with a clearer picture <span aria-hidden="true">↗</span>
+            </Link>
+            <Link className="text-link" href="/case-studies/">
+              Explore illustrative case-study scenarios <span aria-hidden="true">↗</span>
             </Link>
           </div>
           <div className="about-signal-band" aria-label="How we make sense of reputation">
