@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Helix ORM | Build a reputation people trust",
   description:
-    "Build a stronger online reputation with human-first strategy, Reddit intelligence, review management, and AI search visibility.",
+    "Build a stronger online reputation with genuine customer reviews, professional response management, and more accurate search visibility.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
