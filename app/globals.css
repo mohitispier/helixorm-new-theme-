@@ -592,7 +592,7 @@ h1 em, .section-heading em, .approach-copy h2 em, .contact-section h2 em { color
 .about-principle-card { position: relative; min-height: 285px; padding: 23px; border: 1px solid #e0e4dc; border-top: 3px solid #c5d1bf; background: linear-gradient(145deg, #fff 0%, #fbfcf8 72%); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
 .about-principle-card:hover { transform: translateY(-5px); border-top-color: #8da77b; box-shadow: 0 16px 36px rgb(33 49 38 / 8%); }
 .about-principle-card > span { color: #889387; font-size: 9px; letter-spacing: .1em; }
-.about-principle-symbol { display: grid; width: 46px; height: 46px; place-items: center; margin: 35px 0 19px; border: 1px solid #dfe7db; border-radius: 50%; background: #eff3eb; color: #55794d; font-size: 20px; }
+.about-principle-symbol { display: grid; width: 46px; height: 46px; place-items: center; margin: 0px 0 19px; border: 1px solid #dfe7db; border-radius: 50%; background: #eff3eb; color: #55794d; font-size: 20px; }
 .about-principle-card h3 { margin: 0 0 10px; color: #283a31; font-family: var(--font-display); font-size: 23px; font-weight: 400; }
 .about-principle-card p { max-width: 300px; margin: 0; color: #707b71; font-size: 11px; line-height: 1.8; }
 .about-approach { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(50px, 9vw, 120px); padding: 100px max(7%, calc((100% - 1120px) / 2)); background: #e7ebdf; }
@@ -1065,7 +1065,7 @@ h1 em, .section-heading em, .approach-copy h2 em, .contact-section h2 em { color
   .about-visual-caption { right: 15px; bottom: 14px; }
   .about-principle-grid { grid-template-columns: minmax(0, 1fr); }
   .about-principle-card { min-height: 0; padding: 20px; }
-  .about-principle-symbol { margin: 25px 0 15px; }
+  .about-principle-symbol { margin: 0px 0 15px; }
   .about-approach-list li { grid-template-columns: 28px minmax(0, 1fr) 15px; gap: 10px; }
   .about-cta h2 { font-size: 37px; }
   .blog-hero { padding-right: 7%; padding-left: 7%; }

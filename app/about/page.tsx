@@ -155,7 +155,7 @@ export default function AboutPage() {
           <div className="about-principle-grid">
             {principles.map((principle) => (
               <article className="about-principle-card" key={principle.number}>
-                <span>{principle.number}</span>
+                {/* <span>{principle.number}</span> */}
                 <div className="about-principle-symbol" aria-hidden="true">
                   {principle.number === "01" ? "◎" : principle.number === "02" ? "↗" : "✳"}
                 </div>
