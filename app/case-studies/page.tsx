@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import SiteBreadcrumbs from "../../components/site-breadcrumbs";
 import { canonicalUrl } from "../../lib/site";
 import { getServiceHref } from "../../lib/services";
 
@@ -51,11 +52,12 @@ export default function CaseStudiesPage() {
       <SiteHeader />
       <main className="case-studies-page">
         <section className="case-studies-hero" aria-labelledby="case-studies-title">
-          <nav className="breadcrumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">Case studies</span>
-          </nav>
+          <SiteBreadcrumbs
+            items={[
+              { name: "Home", href: "/" },
+              { name: "Case Studies", href: "/case-studies/" },
+            ]}
+          />
           <p className="eyebrow"><span className="status-dot" /> Case studies</p>
           <h1 id="case-studies-title">Results we can <em>stand behind.</em></h1>
           <p>

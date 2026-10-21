@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteFooter from "../../../components/site-footer";
 import SiteHeader from "../../../components/site-header";
+import SiteBreadcrumbs from "../../../components/site-breadcrumbs";
 import { blogArticles } from "../../../lib/blog-content";
 import { getServicePageContent } from "../../../lib/service-page-content";
 import {
@@ -86,19 +87,22 @@ export default async function ServicePage({
       <main className={`service-detail-page${isRedditService ? " service-detail-page-reddit" : ""}`}>
         <section className="service-detail-hero">
           <div className="service-detail-hero-inner">
-            <nav className="breadcrumbs" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <Link href="/reputation-management/">All Services</Link>
-              {parent && (
-                <>
-                  <span aria-hidden="true">/</span>
-                  <Link href={getServiceHref(parent.slug)}>{parent.title}</Link>
-                </>
-              )}
-              <span aria-hidden="true">/</span>
-              <span aria-current="page">{service.title}</span>
-            </nav>
+            <SiteBreadcrumbs
+              items={[
+                { name: "Home", href: "/" },
+                {
+                  name: "Reputation Management",
+                  href: "/reputation-management/",
+                },
+                {
+                  name: service.title,
+                  href: getServiceHref(service.slug),
+                  ...(service.slug === "google-reviews"
+                    ? { mobileName: "Google Reviews" }
+                    : {}),
+                },
+              ]}
+            />
             <div className="service-detail-hero-grid">
               <div className="service-detail-hero-copy">
                 <p className="eyebrow">

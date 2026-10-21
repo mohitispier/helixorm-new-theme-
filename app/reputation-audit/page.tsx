@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import AuditRequestForm from "../../components/audit-request-form";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import SiteBreadcrumbs from "../../components/site-breadcrumbs";
 import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
@@ -26,11 +26,12 @@ export default function ReputationAuditPage() {
       <SiteHeader />
       <main className="audit-page">
         <section className="audit-hero" aria-labelledby="audit-title">
-          <nav className="breadcrumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">Reputation audit</span>
-          </nav>
+          <SiteBreadcrumbs
+            items={[
+              { name: "Home", href: "/" },
+              { name: "Reputation Audit", href: "/reputation-audit/" },
+            ]}
+          />
           <div className="audit-hero-grid">
             <div className="audit-hero-copy">
               <p className="eyebrow"><span className="status-dot" /> A clear place to begin</p>

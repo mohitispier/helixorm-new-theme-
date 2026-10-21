@@ -1,9 +1,11 @@
 import Link from "next/link";
 import SiteFooter from "./site-footer";
 import SiteHeader from "./site-header";
+import SiteBreadcrumbs from "./site-breadcrumbs";
 
 type StandardPageProps = {
   title: string;
+  breadcrumbHref: string;
   eyebrow: string;
   headline: string;
   description: string;
@@ -16,6 +18,7 @@ type StandardPageProps = {
 
 export default function StandardPage({
   title,
+  breadcrumbHref,
   eyebrow,
   headline,
   description,
@@ -29,9 +32,12 @@ export default function StandardPage({
     <>
       <SiteHeader />
       <main className="standard-page">
-        <nav className="breadcrumbs" aria-label="Breadcrumb">
-          <Link href="/">Home</Link><span aria-hidden="true">/</span><span aria-current="page">{title}</span>
-        </nav>
+        <SiteBreadcrumbs
+          items={[
+            { name: "Home", href: "/" },
+            { name: title, href: breadcrumbHref },
+          ]}
+        />
         <section className="standard-page-hero">
           <p className="eyebrow">{eyebrow}</p>
           <h1>{headline}</h1>

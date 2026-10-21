@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import SiteBreadcrumbs from "../../components/site-breadcrumbs";
 import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
@@ -60,11 +61,12 @@ export default function AboutPage() {
       <main className="about-page">
         <section className="about-hero" aria-labelledby="about-title">
           <div className="about-hero-copy">
-            <nav className="breadcrumbs" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page">About Helix ORM</span>
-            </nav>
+            <SiteBreadcrumbs
+              items={[
+                { name: "Home", href: "/" },
+                { name: "About Us", href: "/about/" },
+              ]}
+            />
             <p className="eyebrow"><span className="status-dot" /> About Helix ORM</p>
             <h1 id="about-title">Reputation is earned, <em>together.</em></h1>
             <p className="about-hero-description">

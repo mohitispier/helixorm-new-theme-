@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import SiteBreadcrumbs from "../../components/site-breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Request received | Helix ORM",
@@ -13,11 +13,12 @@ export default function ThankYouPage() {
     <>
       <SiteHeader />
       <main className="standard-page thank-you-page">
-        <nav className="breadcrumbs" aria-label="Breadcrumb">
-          <Link href="/">Home</Link>
-          <span aria-hidden="true">/</span>
-          <span aria-current="page">Request received</span>
-        </nav>
+        {/* <SiteBreadcrumbs
+          items={[
+            { name: "Home", href: "/" },
+            { name: "Request received", href: "/thank-you/" },
+          ]}
+        /> */}
 
         <section className="thank-you-hero" aria-labelledby="thank-you-heading">
           <div className="thank-you-card">

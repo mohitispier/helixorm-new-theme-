@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteFooter from "../../../components/site-footer";
 import SiteHeader from "../../../components/site-header";
+import SiteBreadcrumbs from "../../../components/site-breadcrumbs";
 import {
   blogArticles,
   blogCategories,
@@ -73,13 +74,16 @@ export default async function BlogEntryPage({
         <main className="blog-page">
           <section className="blog-taxonomy-hero">
             <div className="blog-taxonomy-copy">
-              <nav className="breadcrumbs" aria-label="Breadcrumb">
-                <Link href="/">Home</Link>
-                <span aria-hidden="true">/</span>
-                <Link href="/blog/">Insights &amp; Resources</Link>
-                <span aria-hidden="true">/</span>
-                <span aria-current="page">{category.title}</span>
-              </nav>
+              <SiteBreadcrumbs
+                items={[
+                  { name: "Home", href: "/" },
+                  { name: "Blog", href: "/blog/" },
+                  {
+                    name: category.title,
+                    href: `/blog/${category.slug}/`,
+                  },
+                ]}
+              />
               <p className="eyebrow">Category {category.number} / Insights</p>
               <h1>{category.title}<em> perspectives.</em></h1>
               <p>{category.description}</p>
@@ -157,7 +161,6 @@ export default async function BlogEntryPage({
     notFound();
   }
 
-  const articleCategory = getBlogCategory(article.categorySlug);
   const relatedArticles = getRelatedArticles(article.slug, article.relatedArticles);
   const contextualService = article.contextualService
     ? getServiceBySlug(article.contextualService)
@@ -169,19 +172,16 @@ export default async function BlogEntryPage({
       <main className="blog-page blog-article-page">
         <article>
           <header className="blog-article-hero">
-            <nav className="breadcrumbs" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <Link href="/blog/">Insights &amp; Resources</Link>
-              <span aria-hidden="true">/</span>
-              {articleCategory && (
-                <>
-                  <Link href={`/blog/${article.categorySlug}/`}>{article.category}</Link>
-                  <span aria-hidden="true">/</span>
-                </>
-              )}
-              <span aria-current="page">{article.title}</span>
-            </nav>
+            <SiteBreadcrumbs
+              items={[
+                { name: "Home", href: "/" },
+                { name: "Blog", href: "/blog/" },
+                {
+                  name: article.title,
+                  href: `/blog/${article.slug}/`,
+                },
+              ]}
+            />
             <div className="blog-article-hero-grid">
               <div className="blog-article-hero-copy">
                 <Link className="blog-article-category" href={`/blog/${article.categorySlug}/`}>

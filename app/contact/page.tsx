@@ -3,6 +3,7 @@ import Link from "next/link";
 import ContactInquiryForm from "../../components/contact-inquiry-form";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import SiteBreadcrumbs from "../../components/site-breadcrumbs";
 import { canonicalUrl } from "../../lib/site";
 
 export const metadata: Metadata = {
@@ -36,11 +37,12 @@ export default function ContactPage() {
       <SiteHeader />
       <main className="contact-page">
         <section className="contact-hero" aria-labelledby="contact-title">
-          <nav className="breadcrumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">Contact</span>
-          </nav>
+          <SiteBreadcrumbs
+            items={[
+              { name: "Home", href: "/" },
+              { name: "Contact", href: "/contact/" },
+            ]}
+          />
           <p className="eyebrow"><span className="status-dot" /> Start a conversation</p>
           <h1 id="contact-title">Talk to a reputation <em>specialist.</em></h1>
           <p className="contact-hero-description">

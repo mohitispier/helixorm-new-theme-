@@ -13,6 +13,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
+
+
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: "Helix ORM | Build a reputation people trust",
@@ -20,7 +23,10 @@ export const metadata: Metadata = {
     "Build a stronger online reputation with genuine customer reviews, professional response management, and more accurate search visibility.",
 };
 
+
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  
   return (
     <html
       lang="en"
@@ -30,3 +36,5 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 }
+
+

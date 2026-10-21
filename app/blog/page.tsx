@@ -3,6 +3,7 @@ import Link from "next/link";
 import BlogArticleBrowser from "../../components/blog-article-browser";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import SiteBreadcrumbs from "../../components/site-breadcrumbs";
 import { blogCategories } from "../../lib/blog-content";
 import { featuredServices, getServiceHref } from "../../lib/services";
 import { canonicalUrl } from "../../lib/site";
@@ -21,11 +22,12 @@ export default function BlogPage() {
       <main className="blog-page">
         <section className="blog-hero" aria-labelledby="blog-title">
           <div className="blog-hero-copy">
-            <nav className="breadcrumbs" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page">Insights &amp; Resources</span>
-            </nav>
+            <SiteBreadcrumbs
+              items={[
+                { name: "Home", href: "/" },
+                { name: "Blog", href: "/blog/" },
+              ]}
+            />
             <p className="eyebrow"><span className="status-dot" /> Insights &amp; resources</p>
             <h1 id="blog-title">Clear thinking for a changing <em>online world.</em></h1>
             <p className="blog-hero-description">

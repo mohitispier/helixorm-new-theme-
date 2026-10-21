@@ -3,6 +3,7 @@ import { blogCategories } from "../lib/blog-content";
 import { featuredServices, getServiceHref } from "../lib/services";
 
 export default function SiteFooter() {
+
   return (
     <footer className="site-footer">
       <section className="footer-callout" aria-labelledby="footer-callout-title">
@@ -45,6 +46,7 @@ export default function SiteFooter() {
           <strong>Legal</strong>
           <Link href="/privacy-policy/">Privacy Policy</Link>
           <Link href="/terms-of-service/">Terms of Service</Link>
+          <Link href="/sitemap.xml">XML Sitemap</Link>
         </nav>
       </div>
       <div className="footer-bottom"><span>© 2026 Helix ORM</span><span>Reputation, built on what’s real.</span><Link href="/contact/">Contact us <span aria-hidden="true">↗</span></Link></div>

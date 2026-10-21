@@ -1,6 +1,6 @@
-import Link from "next/link";
 import SiteFooter from "./site-footer";
 import SiteHeader from "./site-header";
+import SiteBreadcrumbs from "./site-breadcrumbs";
 
 type LegalSection = {
   title: string;
@@ -24,11 +24,18 @@ export default function LegalDocument({
     <>
       <SiteHeader />
       <main className="legal-page">
-        <nav className="breadcrumbs" aria-label="Breadcrumb">
-          <Link href="/">Home</Link>
-          <span aria-hidden="true">/</span>
-          <span aria-current="page">{title}</span>
-        </nav>
+        <SiteBreadcrumbs
+          items={[
+            { name: "Home", href: "/" },
+            {
+              name: title,
+              href:
+                title === "Privacy Policy"
+                  ? "/privacy-policy/"
+                  : "/terms-of-service/",
+            },
+          ]}
+        />
         <header className="legal-header">
           <div className="legal-header-copy">
             <p className="eyebrow"><span className="status-dot" /> Helix ORM / Legal</p>

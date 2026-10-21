@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "../../components/site-footer";
 import SiteHeader from "../../components/site-header";
+import SiteBreadcrumbs from "../../components/site-breadcrumbs";
 import { categories, featuredServices, getServiceHref } from "../../lib/services";
 import { canonicalUrl } from "../../lib/site";
 
@@ -21,11 +22,12 @@ export default function AllServicesPage() {
       <main className="directory-page">
         <section className="directory-hero">
           <div className="directory-hero-inner">
-            <div className="directory-breadcrumb">
-              <Link href="/">Home</Link>
-              <span>/</span>
-              <span>All Services</span>
-            </div>
+            <SiteBreadcrumbs
+              items={[
+                { name: "Home", href: "/" },
+                { name: "Reputation Management", href: "/reputation-management/" },
+              ]}
+            />
             <div className="directory-hero-layout">
               <div className="directory-hero-copy">
                 <p className="eyebrow">Reputation management services</p>
