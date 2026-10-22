@@ -21,7 +21,7 @@ export default function Home() {
               <p className="eyebrow"><span className="status-dot" /> A thoughtful approach to online reputation</p>
               <h1>Build a stronger<br /><em>online reputation.</em></h1>
               <p className="hero-description">Earn genuine reviews from real customers, strengthen useful brand visibility, and respond to online conversations with care. A good reputation is built over time—with no shortcuts or guaranteed outcomes.</p>
-              <div className="hero-actions"><Link className="button button-dark" href="/reputation-audit/">Request a reputation audit <span aria-hidden="true">↗</span></Link><Link className="text-link" href="/reputation-management/">Explore our services <span aria-hidden="true">↓</span></Link></div>
+              <div className="hero-actions"><Link className="button button-dark" href="/reputation-audit/">Click Here for a Quick  Audit<span aria-hidden="true">↗</span></Link><Link className="text-link" href="/reputation-management/">Explore our services <span aria-hidden="true">↓</span></Link></div>
               <div className="hero-proof"><span className="hero-proof-mark" aria-hidden="true">✳</span><p><strong>Human-first reputation support</strong><br />Built around your brand and audience</p></div>
             </div>
             <div className="signal-panel">
@@ -155,7 +155,13 @@ export default function Home() {
           <Link className="text-link" href="/blog/">Visit insights &amp; resources <span aria-hidden="true">↗</span></Link>
         </section>
 
-        <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="contact-shape" aria-hidden="true">✳</div><p className="eyebrow">10 / Take a thoughtful next step</p><h2 id="contact-title">Let’s make your<br /><em>good name</em> go further.</h2><p>Start with a clearer picture of how your brand appears across reviews, search, and online conversations.</p><div className="hero-actions"><Link className="button button-lime" href="/reputation-audit/">Request a reputation audit <span aria-hidden="true">↗</span></Link><Link className="contact-secondary" href="/contact/">Contact us directly</Link></div></section>
+        <section className="contact-section" id="contact" aria-labelledby="contact-title"><div className="contact-shape" aria-hidden="true">✳</div><p className="eyebrow">10 / Take a thoughtful next step</p><h2 id="contact-title">Let’s make your<br /><em>good name</em> go further.</h2><p>Start with a clearer picture of how your brand appears across reviews, search, and online conversations.</p><div className="hero-actions">
+          <Link className="button button-lime" href="/reputation-audit/">Click Here for a Quick  Audit<span aria-hidden="true">↗</span></Link>
+         <Link className="text-link" href="/contact/">
+                       Contact our team <span aria-hidden="true">↗</span>
+                     </Link>
+          </div>
+          </section>
       </main>
       <SiteFooter />
     </>

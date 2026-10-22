@@ -200,7 +200,7 @@ export default function AboutPage() {
           </p>
           <div className="service-page-actions">
             <Link className="button button-lime" href="/reputation-audit/">
-              Request a reputation audit <span aria-hidden="true">↗</span>
+              Click Here for a Quick  Audit<span aria-hidden="true">↗</span>
             </Link>
             <Link className="text-link" href="/contact/">
               Contact our team <span aria-hidden="true">↗</span>

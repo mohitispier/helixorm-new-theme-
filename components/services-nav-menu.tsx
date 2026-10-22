@@ -90,7 +90,7 @@ export default function ServicesNavMenu() {
               <small>An audit shows which channels matter most.</small>
             </span>
             <span>
-              Request a Reputation Audit <span aria-hidden="true">→</span>
+              Click Here for a Quick  Audit<span aria-hidden="true">→</span>
             </span>
           </Link>
         </div>

@@ -15,6 +15,7 @@ export default function SiteBreadcrumbs({ items }: SiteBreadcrumbsProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@Link": "https://schema.org/Link",
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
@@ -22,7 +23,7 @@ export default function SiteBreadcrumbs({ items }: SiteBreadcrumbsProps) {
       item: canonicalUrl(item.href),
     })),
   };
-  
+
 
   return (
     <>

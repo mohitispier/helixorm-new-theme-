@@ -13,7 +13,7 @@ export default function SiteFooter() {
           <p>Get a clearer view of what’s working, what needs attention, and where to go next.</p>
         </div>
         <Link href="/reputation-audit/" className="footer-callout-button">
-          <span>Request a reputation audit</span><span aria-hidden="true">↗</span>
+          <span>Click Here for a Quick  Audit</span><span aria-hidden="true">↗</span>
         </Link>
         <span className="footer-callout-mark" aria-hidden="true">h</span>
       </section>
