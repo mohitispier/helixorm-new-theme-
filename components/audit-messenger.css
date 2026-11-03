@@ -1,0 +1,101 @@
+.floating-audit-button {
+  position: fixed;
+  z-index: 6;
+  left: max(20px, env(safe-area-inset-left, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 54px;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: #177568;
+  color: #fff;
+  box-shadow: 0 8px 24px #103e3540, inset 0 1px 0 #ffffff26;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background .2s ease;
+}
+.floating-audit-button > span { font-size: 20px; line-height: 1; }
+.floating-audit-button:hover { background: #105b50; }
+.floating-audit-button:focus-visible { outline: 3px solid #98bc66; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .floating-audit-button {
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    min-height: 48px;
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-audit-button { transition: none; }
+}
+
+.floating-audit-button::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 1px solid #fff;
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-audit-button { animation: none; }
+}
+
+
+/* Reference-style moving dot over an outlined circle. */
+.floating-audit-button::after {
+  content: "";
+  position: absolute;
+  left: 27px;
+  top: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px #ffffff66;
+  animation: floating-audit-dot-bounce 2s linear infinite;
+  pointer-events: none;
+}
+@keyframes floating-audit-dot-bounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-10px); }
+  50% { transform: translateY(10px); }
+}
+@media (max-width: 640px) {
+  .floating-audit-button::after { left: 23px; }
+}
+.floating-audit-button:hover::after,
+.floating-audit-button:focus-visible::after { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .floating-audit-button::after { animation: none; }
+}
+
+/* Expanding ripple around the stationary audit button. */
+.floating-audit-button {
+  animation: floating-audit-ripple 1.6s linear infinite;
+}
+@keyframes floating-audit-ripple {
+  0% {
+    box-shadow: 0 8px 24px #103e3540, inset 0 1px 0 #ffffff26, 0 0 0 0 #17756866;
+  }
+  100% {
+    box-shadow: 0 8px 24px #103e3540, inset 0 1px 0 #ffffff26, 0 0 0 18px #17756800;
+  }
+}
+.floating-audit-button:hover,
+.floating-audit-button:focus-visible {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-audit-button { animation: none; }
+}

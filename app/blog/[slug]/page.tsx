@@ -257,7 +257,7 @@ export default async function BlogEntryPage({
           <p className="eyebrow">A thoughtful next step</p>
           <h2>Want a clearer picture of your reputation?</h2>
           <Link className="button button-lime" href="/reputation-audit/">
-            Request a reputation audit <span aria-hidden="true">↗</span>
+            Click Here for a Quick  Audit<span aria-hidden="true">↗</span>
           </Link>
         </section>
       </main>

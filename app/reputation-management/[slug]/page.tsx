@@ -118,7 +118,7 @@ export default async function ServicePage({
                 </p>
                 <div className="service-page-actions">
                   <Link className="button button-dark" href="/reputation-audit/">
-                    Request a reputation audit <span aria-hidden="true">↗</span>
+                    Click Here for a Quick  Audit<span aria-hidden="true">↗</span>
                   </Link>
                   <a className="text-link" href="#service-problem">
                     Explore our approach <span aria-hidden="true">↓</span>

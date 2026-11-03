@@ -42,7 +42,7 @@ export default function AllServicesPage() {
                 </p>
                 <div className="directory-hero-actions">
                   <Link className="button button-dark" href="/reputation-audit/">
-                    Request a reputation audit <span aria-hidden="true">↗</span>
+                    Click Here for a Quick  Audit<span aria-hidden="true">↗</span>
                   </Link>
                   <a className="text-link" href="#featured-services">
                     Explore our services <span aria-hidden="true">↓</span>
@@ -148,7 +148,7 @@ export default function AllServicesPage() {
           <h2>Let’s get a clearer picture.</h2>
           <p className="directory-cta-copy">We’ll help you understand what’s being said, where it matters, and what to do next.</p>
           <Link className="button button-lime" href="/reputation-audit/">
-            Request a reputation audit <span aria-hidden="true">↗</span>
+            Click Here for a Quick  Audit<span aria-hidden="true">↗</span>
           </Link>
           <Link className="directory-contact-link" href="/contact/">Or contact our team directly</Link>
         </section>

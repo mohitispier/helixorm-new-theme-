@@ -135,7 +135,7 @@ export default function CaseStudiesPage() {
           </div>
           <div className="case-studies-cta-actions">
             <Link className="button button-lime" href="/reputation-audit/">
-              Request a reputation audit <span aria-hidden="true">↗</span>
+              Click Here for a Quick  Audit<span aria-hidden="true">↗</span>
             </Link>
             <Link className="case-studies-contact-link" href="/contact/">
               Book a consultation <span aria-hidden="true">↗</span>
