@@ -49,7 +49,7 @@ export default function SiteFooter() {
           <Link href="/sitemap.xml">XML Sitemap</Link>
         </nav>
       </div>
-      <div className="footer-bottom"><span>© 2026 Helix ORM</span><span>Reputation, built on what’s real.</span><Link href="/contact/">Contact us <span aria-hidden="true">↗</span></Link></div>
+      <div className="footer-bottom"><span>© 2026 Helix ORM. All Rights Reserved. | Powered by <a href="https://www.ispier.com/" target="_blank" rel="noopener noreferrer">Ispier Tech Pvt. Ltd.</a></span><span>Reputation, built on what’s real.</span><Link href="/contact/">Contact us <span aria-hidden="true">↗</span></Link></div>
     </footer>
   );
 }
